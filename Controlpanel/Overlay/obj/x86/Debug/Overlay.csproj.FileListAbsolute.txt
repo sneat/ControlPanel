@@ -1,0 +1,71 @@
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\bin\Debug\Overlay.exe
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\bin\Debug\Overlay.pdb
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\Overlay.Form1.resources
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\Overlay.Properties.Resources.resources
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\Overlay.exe
+c:\users\gamecast-2\documents\visual studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\Overlay.pdb
+C:\Users\GameCast-2\documents\visual studio 2010\Projects\Overlay\Overlay\bin\Debug\Svt.Caspar.dll
+C:\Users\GameCast-2\documents\visual studio 2010\Projects\Overlay\Overlay\bin\Debug\Svt.Network.dll
+C:\Users\GameCast-2\documents\visual studio 2010\Projects\Overlay\Overlay\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
+C:\Users\GameCast-2\documents\visual studio 2010\Projects\Overlay\Overlay\bin\Debug\Svt.Caspar.Controls.dll
+C:\Users\GameCast-2\Documents\Visual Studio 2010\Projects\Overlay\Overlay\bin\Debug\Overlay.exe.config
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\bin\Debug\Overlay.exe.config
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\Overlay.exe
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\Overlay.pdb
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\bin\Debug\Overlay.exe
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\bin\Debug\Overlay.pdb
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\bin\Debug\Svt.Caspar.Controls.dll
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\bin\Debug\Svt.Caspar.dll
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\bin\Debug\Svt.Network.dll
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\Overlay.Form1.resources
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\Overlay.Properties.Resources.resources
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Niels-Win\Documents\Visual Studio 2010\Projects\Overlay\Overlay\obj\x86\Debug\GenerateResource.write.1.tlog
+H:\Project\Overlay\Overlay\bin\Debug\Overlay.exe.config
+H:\Project\Overlay\Overlay\obj\x86\Debug\Overlay.exe
+H:\Project\Overlay\Overlay\obj\x86\Debug\Overlay.pdb
+H:\Project\Overlay\Overlay\bin\Debug\Overlay.exe
+H:\Project\Overlay\Overlay\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
+H:\Project\Overlay\Overlay\bin\Debug\Svt.Caspar.Controls.dll
+H:\Project\Overlay\Overlay\bin\Debug\Svt.Caspar.dll
+H:\Project\Overlay\Overlay\bin\Debug\Svt.Network.dll
+H:\Project\Overlay\Overlay\obj\x86\Debug\ResolveAssemblyReference.cache
+H:\Project\Overlay\Overlay\obj\x86\Debug\Overlay.Form1.resources
+H:\Project\Overlay\Overlay\obj\x86\Debug\Overlay.Properties.Resources.resources
+H:\Project\Overlay\Overlay\obj\x86\Debug\GenerateResource.read.1.tlog
+H:\Project\Overlay\Overlay\obj\x86\Debug\GenerateResource.write.1.tlog
+H:\Project\Overlay\Overlay\bin\Debug\Overlay.pdb
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\bin\Debug\Overlay.exe.config
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.exe
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.pdb
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\bin\Debug\Overlay.exe
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\bin\Debug\Overlay.pdb
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.Form1.resources
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.Properties.Resources.resources
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Overlay.exe.config
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.exe
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.pdb
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.Form1.resources
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.Properties.Resources.resources
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Overlay.exe
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Overlay.pdb
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Svt.Caspar.Controls.dll
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Svt.Caspar.dll
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Svt.Network.dll
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\bin\Debug\Interop.ShockwaveFlashObjects.dll
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Interop.BMDSwitcherAPI.dll
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.csproj.ResolveComReference.cache
+C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\bin\Debug\Interop.BMDSwitcherAPI.dll

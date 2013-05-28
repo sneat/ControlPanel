@@ -1,0 +1,108 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Overlay.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Hostname" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="TemplateLowerthird" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/lowerthird</Value>
+    </Setting>
+    <Setting Name="LayerLowerthird" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="LayerMaps" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="TemplateGreen" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/playercams</Value>
+    </Setting>
+    <Setting Name="TemplateMaps" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/maps</Value>
+    </Setting>
+    <Setting Name="CasparChannel" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="FlashLayer" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="LayerGreen" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="TemplateAnnouncement" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/announcement</Value>
+    </Setting>
+    <Setting Name="LayerAnnouncement" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="User" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TemplatePreset1" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/preset1</Value>
+    </Setting>
+    <Setting Name="TemplatePreset2" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/preset2</Value>
+    </Setting>
+    <Setting Name="TemplatePreset3" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/preset3</Value>
+    </Setting>
+    <Setting Name="TemplatePreset4" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/preset4</Value>
+    </Setting>
+    <Setting Name="TemplatePreset5" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/preset5</Value>
+    </Setting>
+    <Setting Name="TemplatePreset6" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/preset6</Value>
+    </Setting>
+    <Setting Name="TemplatePreset7" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/preset7</Value>
+    </Setting>
+    <Setting Name="TemplatePreset8" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/preset8</Value>
+    </Setting>
+    <Setting Name="LayerPreset1" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="LayerPreset2" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="LayerPreset3" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="LayerPreset4" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="LayerPreset5" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="LayerPreset6" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="LayerPreset7" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="LayerPreset8" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="TemplateSchedule" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/schedule</Value>
+    </Setting>
+    <Setting Name="LayerSchedule" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="TemplateSting" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Overlay/sting</Value>
+    </Setting>
+    <Setting Name="LayerSting" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">99</Value>
+    </Setting>
+    <Setting Name="StingCutTime" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1100</Value>
+    </Setting>
+    <Setting Name="ATEMHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
