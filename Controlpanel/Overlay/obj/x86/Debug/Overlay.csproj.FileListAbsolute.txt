@@ -62,10 +62,11 @@ C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\GenerateResource.wr
 C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Overlay.exe
 C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Overlay.pdb
 C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
-C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Svt.Caspar.Controls.dll
-C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Svt.Caspar.dll
-C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Svt.Network.dll
 C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\bin\Debug\Interop.ShockwaveFlashObjects.dll
 C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Interop.BMDSwitcherAPI.dll
 C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.csproj.ResolveComReference.cache
 C:\Users\GameCast-2\Dropbox\CCG\Overlay\Overlay\bin\Debug\Interop.BMDSwitcherAPI.dll
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Interop.BMDSwitcherAPI.dll
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\obj\x86\Debug\Overlay.csproj.ResolveComReference.cache
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Interop.ShockwaveFlashObjects.dll
+C:\Users\Niels-Win\Dropbox\CCG\Overlay\Overlay\bin\Debug\Interop.BMDSwitcherAPI.dll

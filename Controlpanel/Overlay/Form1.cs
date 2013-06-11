@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region includes
+//.NET Framework
+using System;
 using System.Configuration;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +14,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.IO;
 using System.Threading;
+using System.Net.Sockets;
 
 //Caspar API
 using Svt.Caspar;
@@ -22,11 +25,13 @@ using System.Runtime.InteropServices;
 
 //BMD API
 using BMDSwitcherAPI;
+#endregion
 
 namespace Overlay
 {
     public partial class Form1 : Form
     {
+        #region variables
         //Delegates
         private delegate void UpdateGUI(object parameter);
         private delegate void del();
@@ -41,7 +46,7 @@ namespace Overlay
         private int _initSchedule;
         private int[] _initPreset = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         private string flashCmd;
-        private System.Timers.Timer aTimer = new System.Timers.Timer(Properties.Settings.Default.StingCutTime);
+        private System.Timers.Timer aTimer;
 
         //BMD Objects
         private IBMDSwitcherDiscovery m_switcherDiscovery;
@@ -55,7 +60,9 @@ namespace Overlay
         private bool m_currentTransitionReachedHalfway = false;
 
         private List<InputMonitor> m_inputMonitors = new List<InputMonitor>();
+        #endregion
 
+        #region constructor
         //Initializing the form
         public Form1()
         {
@@ -72,12 +79,10 @@ namespace Overlay
             caspar_.FailedConnect += new EventHandler<NetworkEventArgs>(caspar__FailedConnected);
             caspar_.Disconnected += new EventHandler<NetworkEventArgs>(caspar__Disconnected);
 
-            //Delay for the sting transition
-            aTimer.Elapsed += new ElapsedEventHandler(this.endSting);
-
             //Disable all controls
             disableControls();
 
+            //Creates the first part of every CG command ("CG CC-FL")
             flashCmd = "CG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.FlashLayer;
 
             //Initializing BMD ATEM
@@ -105,7 +110,17 @@ namespace Overlay
 
             SwitcherDisconnected();		// start with switcher disconnected
 
+            slcTeam1.SelectedIndex = 1;
+            slcTeam2.SelectedIndex = 0;
+
+            stingDelay.Text = Properties.Settings.Default.StingCutTime.ToString();
+
+            chkCount9.Checked = true;
+
+            tbCasparServer.Text = Properties.Settings.Default.Hostname;
+
         }
+        #endregion
 
         #region caspar connection
         //Button handlers
@@ -146,6 +161,7 @@ namespace Overlay
             toolStripStatusLabel1.Text = "Connected to " + caspar_.Settings.Hostname; // Properties.Settings.Default.Hostname;
 
             enableControls();
+            popVidBox();
         }
 
 
@@ -572,6 +588,7 @@ namespace Overlay
             groupBox2.Enabled = false;
             groupBox3.Enabled = false;
             groupBox5.Enabled = false;
+            groupBox6.Enabled = false;
         }
 
         //Enable CasparCG controls
@@ -581,10 +598,34 @@ namespace Overlay
             groupBox2.Enabled = true;
             groupBox3.Enabled = true;
             groupBox5.Enabled = true;
+            groupBox6.Enabled = true;
         }
         #endregion
 
         #region actions
+
+        //Populate video comboboxes
+        private void popVidBox()
+        {
+            int range = caspar_.Mediafiles.Count;
+            for (int i = 0; i < range; i++)
+            {
+                MediaInfo item = caspar_.Mediafiles[i];
+
+                string filename = item.ToString();
+                string filetype = item.Type.ToString();
+
+                if (filetype == "MOVIE")
+                {
+                    videoBox.Items.Add(filename);
+                }
+                else
+                {
+                    imageBox.Items.Add(filename);
+                }
+            }
+        }
+
         //Change logo action
         private void changeLogo(int id)
         {
@@ -622,10 +663,44 @@ namespace Overlay
                 cgData.Clear();
 
                 // build data
-                cgData.SetData("cname1", cname1.Text);
-                cgData.SetData("ctw1", ctw1.Text);
-                cgData.SetData("cname2", cname2.Text);
-                cgData.SetData("ctw2", ctw2.Text);
+                if (chkCa1.Checked)
+                {
+                    cgData.SetData("nick1", cnick1.Text);
+                    cgData.SetData("name1", cname1.Text);
+                    cgData.SetData("title1", ctitle1.Text);
+                }
+                else
+                {
+                    cgData.SetData("nick1", "");
+                    cgData.SetData("name1", "");
+                    cgData.SetData("title1", "");
+                }
+
+                if (chkCa2.Checked)
+                {
+                    cgData.SetData("nick2", cnick2.Text);
+                    cgData.SetData("name2", cname2.Text);
+                    cgData.SetData("title2", ctitle2.Text);
+                }
+                else
+                {
+                    cgData.SetData("nick2", "");
+                    cgData.SetData("name2", "");
+                    cgData.SetData("title2", "");
+                }
+
+                if (chkCa3.Checked)
+                {
+                    cgData.SetData("nick3", cnick3.Text);
+                    cgData.SetData("name3", cname3.Text);
+                    cgData.SetData("title3", ctitle3.Text);
+                }
+                else
+                {
+                    cgData.SetData("nick3", "");
+                    cgData.SetData("name3", "");
+                    cgData.SetData("title3", "");
+                }
             }
             catch
             {
@@ -691,7 +766,7 @@ namespace Overlay
                 cgData.Clear();
 
                 // build data
-                cgData.SetData("announcetext", txtAnnounce.Text);
+                cgData.SetData("scrollText", txtAnnounce.Text);
             }
             catch
             {
@@ -715,17 +790,73 @@ namespace Overlay
                 cgData.Clear();
 
                 // build data
-                cgData.SetData("t1", schT1.Text);
-                cgData.SetData("h1", schH1.Text);
+                cgData.SetData("time1", schT1.Text);
+                cgData.SetData("text1", schH1.Text);
 
-                cgData.SetData("t2", schT2.Text);
-                cgData.SetData("h2", schH2.Text);
+                cgData.SetData("time2", schT2.Text);
+                cgData.SetData("text2", schH2.Text);
 
-                cgData.SetData("t3", schT3.Text);
-                cgData.SetData("h3", schH3.Text);
+                cgData.SetData("time3", schT3.Text);
+                cgData.SetData("text3", schH3.Text);
 
-                cgData.SetData("t4", schT4.Text);
-                cgData.SetData("h4", schH4.Text);
+                cgData.SetData("time4", schT4.Text);
+                cgData.SetData("text4", schH4.Text);
+
+                cgData.SetData("time5", schT5.Text);
+                cgData.SetData("text5", schH5.Text);
+
+                cgData.SetData("time6", schT6.Text);
+                cgData.SetData("text6", schH6.Text);
+
+                cgData.SetData("time7", schT7.Text);
+                cgData.SetData("text7", schH7.Text);
+
+                cgData.SetData("time8", schT8.Text);
+                cgData.SetData("text8", schH8.Text);
+
+                cgData.SetData("txtminute", cdMM.Text);
+                cgData.SetData("txthour", cdH.Text);
+                cgData.SetData("txtday", cdD.Text);
+                cgData.SetData("txtmonth", cdM.Text);
+                cgData.SetData("txtyear", cdY.Text);
+
+                if (chkCount1.Checked)
+                {
+                    cgData.SetData("countDown", "1");
+                }
+                else if (chkCount2.Checked)
+                {
+                    cgData.SetData("countDown", "2");
+                }
+                else if (chkCount3.Checked)
+                {
+                    cgData.SetData("countDown", "3");
+                }
+                else if (chkCount4.Checked)
+                {
+                    cgData.SetData("countDown", "4");
+                }
+                else if (chkCount5.Checked)
+                {
+                    cgData.SetData("countDown", "5");
+                }
+                else if (chkCount6.Checked)
+                {
+                    cgData.SetData("countDown", "6");
+                }
+                else if (chkCount7.Checked)
+                {
+                    cgData.SetData("countDown", "7");
+                }
+                else if (chkCount8.Checked)
+                {
+                    cgData.SetData("countDown", "8");
+                }
+                else
+                {
+                    cgData.SetData("countDown", "9");
+                }
+
             }
             catch
             {
@@ -735,6 +866,7 @@ namespace Overlay
             {
                 if (caspar_.IsConnected && caspar_.Channels.Count > 0)
                 {
+                    caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.LayerScheduleBG + " " + Properties.Settings.Default.TemplateScheduleBG + " MIX 50 EASEINSINE LOOP");
                     caspar_.SendString(flashCmd + " ADD " + Properties.Settings.Default.LayerSchedule + " " + Properties.Settings.Default.TemplateSchedule + " 1 \"" + cgData.ToAMCPEscapedXml() + "\"");
                 }
             }
@@ -749,17 +881,72 @@ namespace Overlay
                 cgData.Clear();
 
                 // build data
-                cgData.SetData("t1", schT1.Text);
-                cgData.SetData("h1", schH1.Text);
+                cgData.SetData("time1", schT1.Text);
+                cgData.SetData("text1", schH1.Text);
 
-                cgData.SetData("t2", schT2.Text);
-                cgData.SetData("h2", schH2.Text);
+                cgData.SetData("time2", schT2.Text);
+                cgData.SetData("text2", schH2.Text);
 
-                cgData.SetData("t3", schT3.Text);
-                cgData.SetData("h3", schH3.Text);
+                cgData.SetData("time3", schT3.Text);
+                cgData.SetData("text3", schH3.Text);
 
-                cgData.SetData("t4", schT4.Text);
-                cgData.SetData("h4", schH4.Text);
+                cgData.SetData("time4", schT4.Text);
+                cgData.SetData("text4", schH4.Text);
+
+                cgData.SetData("time5", schT5.Text);
+                cgData.SetData("text5", schH5.Text);
+
+                cgData.SetData("time6", schT6.Text);
+                cgData.SetData("text6", schH6.Text);
+
+                cgData.SetData("time7", schT7.Text);
+                cgData.SetData("text7", schH7.Text);
+
+                cgData.SetData("time8", schT8.Text);
+                cgData.SetData("text8", schH8.Text);
+
+                cgData.SetData("txtminute", cdMM.Text);
+                cgData.SetData("txthour", cdH.Text);
+                cgData.SetData("txtday", cdD.Text);
+                cgData.SetData("txtmonth", cdM.Text);
+                cgData.SetData("txtyear", cdY.Text);
+
+                if (chkCount1.Checked)
+                {
+                    cgData.SetData("countDown", "1");
+                }
+                else if (chkCount2.Checked)
+                {
+                    cgData.SetData("countDown", "2");
+                }
+                else if (chkCount3.Checked)
+                {
+                    cgData.SetData("countDown", "3");
+                }
+                else if (chkCount4.Checked)
+                {
+                    cgData.SetData("countDown", "4");
+                }
+                else if (chkCount5.Checked)
+                {
+                    cgData.SetData("countDown", "5");
+                }
+                else if (chkCount6.Checked)
+                {
+                    cgData.SetData("countDown", "6");
+                }
+                else if (chkCount7.Checked)
+                {
+                    cgData.SetData("countDown", "7");
+                }
+                else if (chkCount8.Checked)
+                {
+                    cgData.SetData("countDown", "8");
+                }
+                else
+                {
+                    cgData.SetData("countDown", "9");
+                }
             }
             catch
             {
@@ -1111,6 +1298,7 @@ namespace Overlay
             }
             else
             {
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.LayerScheduleBG + " EMPTY MIX 20 EASEINSINE AUTO");
                 this.btnShowSchedule.Text = "Show";
                 this.btnShowSchedule.BackColor = System.Drawing.Color.LawnGreen;
                 _initSchedule = 0;
@@ -1126,31 +1314,15 @@ namespace Overlay
             Application.Exit();
         }
 
-        //Show/hide schedule - change color on the button
-        /*private void btnShowSchedule_Click(object sender, EventArgs e)
-        {
-            if (_initSchedule == 0)
-            {
-                startSchedule();
-                this.btnShowSchedule.Text = "Hide";
-                this.btnShowSchedule.BackColor = System.Drawing.Color.Red;
-                _initSchedule = 1;
-            }
-            else
-            {
-                this.btnShowSchedule.Text = "Show";
-                this.btnShowSchedule.BackColor = System.Drawing.Color.LawnGreen;
-                _initSchedule = 0;
-            }
-
-            toggleSchedule();
-        }
-        */
         //Click the sting button - play sting template
         private void buttonSting_Click(object sender, EventArgs e)
         {
             try
             {
+                //Set delay and end-action
+                aTimer = new System.Timers.Timer(Convert.ToInt32(stingDelay.Text));
+                aTimer.Elapsed += new ElapsedEventHandler(this.endSting);
+
                 caspar_.SendString(flashCmd + " ADD " + Properties.Settings.Default.LayerSting + " " + Properties.Settings.Default.TemplateSting + " 1");
             }
             catch
@@ -1168,10 +1340,56 @@ namespace Overlay
             reloadSchedule();
         }
 
-        /* FOR FUTURE USE - DYNAMIC LOADING OF IMAGES */
-        private void button4_Click(object sender, EventArgs e)
+        //Play selected video - fades to EMPTY after ended
+        private void buttonPlayVid_Click(object sender, EventArgs e)
         {
-            schH1.Text = browseFile();
+            try
+            {
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " " + videoBox.Text + " MIX 20 EASEINSINE AUTO");
+                caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+            }
+            catch { }
+        }
+
+        //Stop current video
+        private void buttonStopVid_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+            } catch { }
+        }
+
+        //Removes current image on the scene
+        private void buttonStopImg_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+            }
+            catch { }
+        }
+
+        //Adds marked image to the scene
+        private void buttonPlayImg_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " " + imageBox.Text + " MIX 20 EASEINSINE AUTO");
+                caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+            }
+            catch { }
+        }
+
+        //Loops the marked video
+        private void buttonVidLoop_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " " + videoBox.Text + " MIX 20 EASEINSINE LOOP");
+                caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+            }
+            catch { }
         }
         #endregion
     }
