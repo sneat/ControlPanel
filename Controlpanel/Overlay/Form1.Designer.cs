@@ -211,6 +211,7 @@
             this.btnClear = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.panVids = new System.Windows.Forms.Panel();
+            this.buttonVidLoop = new System.Windows.Forms.Button();
             this.videoBox = new System.Windows.Forms.ListBox();
             this.buttonStopVid = new System.Windows.Forms.Button();
             this.buttonPlayVid = new System.Windows.Forms.Button();
@@ -219,7 +220,7 @@
             this.imageBox = new System.Windows.Forms.ListBox();
             this.buttonStopImg = new System.Windows.Forms.Button();
             this.buttonPlayImg = new System.Windows.Forms.Button();
-            this.buttonVidLoop = new System.Windows.Forms.Button();
+            this.settings_button = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -2096,7 +2097,7 @@
             this.label47.Size = new System.Drawing.Size(494, 15);
             this.label47.TabIndex = 123;
             this.label47.Text = "This will switch to the logos matching the source in program in the ATEM Software" +
-                " Control";
+    " Control";
             // 
             // checkLogoAuto
             // 
@@ -2245,7 +2246,7 @@
             // 
             this.btnClear.BackColor = System.Drawing.Color.Red;
             this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClear.Location = new System.Drawing.Point(1493, 8);
+            this.btnClear.Location = new System.Drawing.Point(1403, 8);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(123, 23);
             this.btnClear.TabIndex = 127;
@@ -2276,6 +2277,18 @@
             this.panVids.Name = "panVids";
             this.panVids.Size = new System.Drawing.Size(278, 277);
             this.panVids.TabIndex = 0;
+            // 
+            // buttonVidLoop
+            // 
+            this.buttonVidLoop.BackColor = System.Drawing.Color.LawnGreen;
+            this.buttonVidLoop.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonVidLoop.Location = new System.Drawing.Point(108, 224);
+            this.buttonVidLoop.Name = "buttonVidLoop";
+            this.buttonVidLoop.Size = new System.Drawing.Size(70, 44);
+            this.buttonVidLoop.TabIndex = 211;
+            this.buttonVidLoop.Text = "Loop";
+            this.buttonVidLoop.UseVisualStyleBackColor = false;
+            this.buttonVidLoop.Click += new System.EventHandler(this.buttonVidLoop_Click);
             // 
             // videoBox
             // 
@@ -2366,23 +2379,22 @@
             this.buttonPlayImg.UseVisualStyleBackColor = false;
             this.buttonPlayImg.Click += new System.EventHandler(this.buttonPlayImg_Click);
             // 
-            // buttonVidLoop
+            // settings_button
             // 
-            this.buttonVidLoop.BackColor = System.Drawing.Color.LawnGreen;
-            this.buttonVidLoop.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonVidLoop.Location = new System.Drawing.Point(108, 224);
-            this.buttonVidLoop.Name = "buttonVidLoop";
-            this.buttonVidLoop.Size = new System.Drawing.Size(70, 44);
-            this.buttonVidLoop.TabIndex = 211;
-            this.buttonVidLoop.Text = "Loop";
-            this.buttonVidLoop.UseVisualStyleBackColor = false;
-            this.buttonVidLoop.Click += new System.EventHandler(this.buttonVidLoop_Click);
+            this.settings_button.Location = new System.Drawing.Point(1541, 8);
+            this.settings_button.Name = "settings_button";
+            this.settings_button.Size = new System.Drawing.Size(75, 23);
+            this.settings_button.TabIndex = 197;
+            this.settings_button.Text = "Settings";
+            this.settings_button.UseVisualStyleBackColor = true;
+            this.settings_button.Click += new System.EventHandler(this.settings_button_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1694, 714);
+            this.Controls.Add(this.settings_button);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.btnClear);
@@ -2622,6 +2634,7 @@
         private System.Windows.Forms.Button buttonStopImg;
         private System.Windows.Forms.Button buttonPlayImg;
         private System.Windows.Forms.Button buttonVidLoop;
+        private System.Windows.Forms.Button settings_button;
     }
 }
 

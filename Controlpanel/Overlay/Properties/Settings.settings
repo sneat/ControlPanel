@@ -92,7 +92,7 @@
     <Setting Name="StingCutTime" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1100</Value>
     </Setting>
-    <Setting Name="ATEMHost" Type="System.String" Scope="Application">
+    <Setting Name="ATEMHost" Type="System.String" Scope="User">
       <Value Profile="(Default)">localhost</Value>
     </Setting>
     <Setting Name="LayerAnnouncement" Type="System.Int32" Scope="Application">
@@ -107,10 +107,10 @@
     <Setting Name="VideoLayer" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">4</Value>
     </Setting>
-    <Setting Name="VideoFolder" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\CasparCG\CasparCG Server 2.0.3\Server\media</Value>
+    <Setting Name="VideoFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\CasparCG\Server\media</Value>
     </Setting>
-    <Setting Name="Hostname" Type="System.String" Scope="Application">
+    <Setting Name="CasparCGHostname" Type="System.String" Scope="User">
       <Value Profile="(Default)">192.168.0.17</Value>
     </Setting>
     <Setting Name="FlashLayer" Type="System.Int32" Scope="Application">
@@ -121,6 +121,12 @@
     </Setting>
     <Setting Name="ImgLayer" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="NetworkVideoFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CasparCGPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5250</Value>
     </Setting>
   </Settings>
 </SettingsFile>

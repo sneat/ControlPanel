@@ -299,12 +299,15 @@ namespace Overlay.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string ATEMHost {
             get {
                 return ((string)(this["ATEMHost"]));
+            }
+            set {
+                this["ATEMHost"] = value;
             }
         }
         
@@ -344,21 +347,27 @@ namespace Overlay.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\CasparCG\\CasparCG Server 2.0.3\\Server\\media")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\CasparCG\\Server\\media")]
         public string VideoFolder {
             get {
                 return ((string)(this["VideoFolder"]));
             }
+            set {
+                this["VideoFolder"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("192.168.0.17")]
-        public string Hostname {
+        public string CasparCGHostname {
             get {
-                return ((string)(this["Hostname"]));
+                return ((string)(this["CasparCGHostname"]));
+            }
+            set {
+                this["CasparCGHostname"] = value;
             }
         }
         
@@ -386,6 +395,30 @@ namespace Overlay.Properties {
         public int ImgLayer {
             get {
                 return ((int)(this["ImgLayer"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NetworkVideoFolder {
+            get {
+                return ((string)(this["NetworkVideoFolder"]));
+            }
+            set {
+                this["NetworkVideoFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5250")]
+        public int CasparCGPort {
+            get {
+                return ((int)(this["CasparCGPort"]));
+            }
+            set {
+                this["CasparCGPort"] = value;
             }
         }
     }

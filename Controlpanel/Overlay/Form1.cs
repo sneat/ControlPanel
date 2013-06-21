@@ -117,8 +117,8 @@ namespace Overlay
 
             chkCount9.Checked = true;
 
-            tbCasparServer.Text = Properties.Settings.Default.Hostname;
-
+            tbCasparServer.Text = Properties.Settings.Default.CasparCGHostname;
+            textBoxIP.Text = Properties.Settings.Default.ATEMHost;
         }
         #endregion
 
@@ -130,8 +130,8 @@ namespace Overlay
 
             if (!caspar_.IsConnected)
             {
-                caspar_.Settings.Hostname = this.tbCasparServer.Text; // Properties.Settings.Default.Hostname;
-                caspar_.Settings.Port = 5250;
+                caspar_.Settings.Hostname = this.tbCasparServer.Text; // Properties.Settings.Default.CasparCGHostname;
+                caspar_.Settings.Port = Properties.Settings.Default.CasparCGPort;
                 caspar_.Connect();
             }
             else
@@ -158,7 +158,9 @@ namespace Overlay
 
             NetworkEventArgs e = (NetworkEventArgs)param;
             statusStrip1.BackColor = Color.LightGreen;
-            toolStripStatusLabel1.Text = "Connected to " + caspar_.Settings.Hostname; // Properties.Settings.Default.Hostname;
+            toolStripStatusLabel1.Text = "Connected to " + caspar_.Settings.Hostname; // Properties.Settings.Default.CasparCGHostname;
+            Properties.Settings.Default.CasparCGHostname = caspar_.Settings.Hostname;
+            Properties.Settings.Default.Save();
 
             enableControls();
             popVidBox();
@@ -181,7 +183,7 @@ namespace Overlay
 
             NetworkEventArgs e = (NetworkEventArgs)param;
             statusStrip1.BackColor = Color.LightCoral;
-            toolStripStatusLabel1.Text = "Failed to connect to " + caspar_.Settings.Hostname; // Properties.Settings.Default.Hostname;
+            toolStripStatusLabel1.Text = "Failed to connect to " + caspar_.Settings.Hostname; // Properties.Settings.Default.CasparCGHostname;
 
             disableControls();
         }
@@ -203,7 +205,7 @@ namespace Overlay
 
             NetworkEventArgs e = (NetworkEventArgs)param;
             statusStrip1.BackColor = Color.LightCoral;
-            toolStripStatusLabel1.Text = "Disconnected from " + caspar_.Settings.Hostname; // Properties.Settings.Default.Hostname;
+            toolStripStatusLabel1.Text = "Disconnected from " + caspar_.Settings.Hostname; // Properties.Settings.Default.CasparCGHostname;
 
             disableControls();
         }
@@ -232,6 +234,9 @@ namespace Overlay
         //When switcher is connected
         private void SwitcherConnected()
         {
+            Properties.Settings.Default.ATEMHost = textBoxIP.Text;
+            Properties.Settings.Default.Save();
+
             bmdConnect.Enabled = false;
             groupBox4.Enabled = true;
 
@@ -1390,6 +1395,13 @@ namespace Overlay
                 caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
             }
             catch { }
+        }
+
+        //Opens the settings dialog
+        private void settings_button_Click(object sender, EventArgs e)
+        {
+            Settings settingsForm = new Settings();
+            settingsForm.ShowDialog();
         }
         #endregion
     }
