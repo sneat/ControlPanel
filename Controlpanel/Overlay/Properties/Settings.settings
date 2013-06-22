@@ -107,9 +107,6 @@
     <Setting Name="VideoLayer" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">4</Value>
     </Setting>
-    <Setting Name="VideoFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\CasparCG\Server\media</Value>
-    </Setting>
     <Setting Name="CasparCGHostname" Type="System.String" Scope="User">
       <Value Profile="(Default)">192.168.0.17</Value>
     </Setting>
@@ -127,6 +124,15 @@
     </Setting>
     <Setting Name="CasparCGPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5250</Value>
+    </Setting>
+    <Setting Name="VideoFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\CasparCG\CasparCG Server 2.0.3\Server\media</Value>
+    </Setting>
+    <Setting Name="MediaTransitionDuration" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="MediaTransitionType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">MIX</Value>
     </Setting>
   </Settings>
 </SettingsFile>

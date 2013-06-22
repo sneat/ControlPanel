@@ -17,12 +17,13 @@ namespace Overlay
             CasparCGHostnameTextBox.Text = Properties.Settings.Default.CasparCGHostname;
             CasparCGPortTextBox.Text = Properties.Settings.Default.CasparCGPort.ToString();
             CasparCGNetworkVideoFolderTextBox.Text = Properties.Settings.Default.NetworkVideoFolder;
-            LocalVideoFolderTextBox.Text = Properties.Settings.Default.VideoFolder;
+            MediaTransitionComboBox.Text = Properties.Settings.Default.MediaTransitionType;
+            TransitionDurationTextBox.Text = Properties.Settings.Default.MediaTransitionDuration.ToString();
         }
 
         private void CasparCGPortTextBox_Validating(object sender, CancelEventArgs e)
         {
-            if (!System.Text.RegularExpressions.Regex.Match(this.CasparCGPortTextBox.Text, @"^\d+$").Success) {
+            if (!System.Text.RegularExpressions.Regex.Match(CasparCGPortTextBox.Text, @"^\d+$").Success) {
                 MessageBox.Show("Please enter a valid port. Default is 5250", "Invalid port", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 e.Cancel = true;
             }
@@ -33,7 +34,8 @@ namespace Overlay
             Properties.Settings.Default.CasparCGHostname = CasparCGHostnameTextBox.Text;
             Properties.Settings.Default.CasparCGPort = Convert.ToInt32(CasparCGPortTextBox.Text);
             Properties.Settings.Default.NetworkVideoFolder = CasparCGNetworkVideoFolderTextBox.Text;
-            Properties.Settings.Default.VideoFolder = LocalVideoFolderTextBox.Text;
+            Properties.Settings.Default.MediaTransitionType = MediaTransitionComboBox.Text;
+            Properties.Settings.Default.MediaTransitionDuration = Convert.ToInt32(TransitionDurationTextBox.Text);
 
             Properties.Settings.Default.Save();
 
@@ -62,6 +64,19 @@ namespace Overlay
             if (FolderBrowser.ShowDialog() == DialogResult.OK)
             {
                 CasparCGNetworkVideoFolderTextBox.Text = FolderBrowser.SelectedPath;
+            }
+        }
+
+        private void TransitionDurationTextBox_Validating(object sender, CancelEventArgs e)
+        {
+            if (!System.Text.RegularExpressions.Regex.Match(TransitionDurationTextBox.Text, @"^\d+$").Success)
+            {
+                MessageBox.Show("Please enter a valid duration (in milliseconds).", "Invalid duration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Cancel = true;
+            }
+            else if (Convert.ToInt32(TransitionDurationTextBox.Text) < 1)
+            {
+                TransitionDurationTextBox.Text = "1";
             }
         }
     }

@@ -25,6 +25,8 @@ using System.Runtime.InteropServices;
 
 //BMD API
 using BMDSwitcherAPI;
+using MediaInfoNET;
+using Microsoft.Win32;
 #endregion
 
 namespace Overlay
@@ -60,6 +62,13 @@ namespace Overlay
         private bool m_currentTransitionReachedHalfway = false;
 
         private List<InputMonitor> m_inputMonitors = new List<InputMonitor>();
+
+        //Video parsing
+        private List<FileInfo> VideoFiles = new List<FileInfo>();
+        private Dictionary<string, VideoFile> ParsedVideoFiles = new Dictionary<string, VideoFile>();
+
+        //Threading
+        static BackgroundWorker BackgroundWorker = new BackgroundWorker();
         #endregion
 
         #region constructor
@@ -67,6 +76,8 @@ namespace Overlay
         public Form1()
         {
             InitializeComponent();
+            VideoListStatusLabel.Visible = false;
+            VideoListProgressBar.Visible = false;
 
             //Init values
             _initMaps = 0;
@@ -117,6 +128,8 @@ namespace Overlay
 
             chkCount9.Checked = true;
 
+            int idx = VideoTabControl.TabPages.IndexOf(PlaylistsTab);
+            VideoTabControl.TabPages.RemoveAt(idx);
             tbCasparServer.Text = Properties.Settings.Default.CasparCGHostname;
             textBoxIP.Text = Properties.Settings.Default.ATEMHost;
         }
@@ -155,6 +168,14 @@ namespace Overlay
 
             caspar_.RefreshMediafiles();
             caspar_.RefreshDatalist();
+
+            if (caspar_.Mediafiles.Count < 1)
+            {
+                // Couldn't get the media list, wait and then try again
+                Thread.Sleep(500);
+                caspar_.RefreshMediafiles();
+                caspar_.RefreshDatalist();
+            }
 
             NetworkEventArgs e = (NetworkEventArgs)param;
             statusStrip1.BackColor = Color.LightGreen;
@@ -612,23 +633,128 @@ namespace Overlay
         //Populate video comboboxes
         private void popVidBox()
         {
+            PlaylistsTab.Enabled = false;
+            Boolean HasVideos = false;
             int range = caspar_.Mediafiles.Count;
             for (int i = 0; i < range; i++)
             {
-                MediaInfo item = caspar_.Mediafiles[i];
+                Svt.Caspar.MediaInfo item = caspar_.Mediafiles[i];
 
                 string filename = item.ToString();
                 string filetype = item.Type.ToString();
+                Console.WriteLine("Filename from Capsar {0}", item.ToString());
 
                 if (filetype == "MOVIE")
                 {
                     videoBox.Items.Add(filename);
+                    HasVideos = true;
                 }
                 else
                 {
                     imageBox.Items.Add(filename);
                 }
             }
+            if (HasVideos && Properties.Settings.Default.NetworkVideoFolder.Length > 0 && range > 0)
+            {
+                DirectoryInfo dinfo = new DirectoryInfo(@Properties.Settings.Default.NetworkVideoFolder);
+                FileInfo[] Files = dinfo.GetFiles("*.*", SearchOption.AllDirectories);
+
+                foreach (FileInfo file in Files)
+                {
+                        String name = ConvertNetworkPathToCasparPath(file);
+                        // Check to make sure it is a video and exists for CasparCG
+                        if (GetMimeType(file).StartsWith("video/") && videoBox.Items.Contains(name))
+                        {
+                            VideoFiles.Add(file);
+                        }
+                }
+
+                if (VideoFiles.Count > 0)
+                {
+                    VideoListStatusLabel.Visible = true;
+                    VideoListProgressBar.Visible = true;
+
+                    BackgroundWorker.DoWork += ParseVideoFiles;
+                    BackgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
+                    BackgroundWorker.RunWorkerCompleted += BackgroundWorker_Completed;
+                    BackgroundWorker.WorkerReportsProgress = true;
+                    BackgroundWorker.RunWorkerAsync();
+                }
+            }
+        }
+
+        //Convert UNC file path to filename for use within CasparCG
+        public String ConvertNetworkPathToCasparPath(FileInfo file)
+        {
+            return file.FullName.Replace(Properties.Settings.Default.NetworkVideoFolder + "\\", "").Replace(file.Extension, "").ToUpper();
+        }
+
+        //Read video files over network to get duration
+        private void ParseVideoFiles(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            int total = VideoFiles.Count();
+            int i = 0;
+            foreach (FileInfo file in VideoFiles)
+            {
+                i++;
+                MediaFile mFile = new MediaFile(file.FullName);
+
+                VideoFile VideoFile = new VideoFile();
+                String CasparCgPath = ConvertNetworkPathToCasparPath(file);
+                VideoFile.CasparPath = CasparCgPath;
+                VideoFile.NetworkPath = file.FullName;
+                VideoFile.Duration = mFile.General.DurationMillis;
+
+                ParsedVideoFiles.Add(CasparCgPath, VideoFile);
+
+                //Determine percentage progress completed
+                int progress = Convert.ToInt32(Math.Round(((double)i / (double)total) * 100d));
+                BackgroundWorker.ReportProgress(progress);
+
+            }
+        }
+
+        //Called when background video parser completed
+        private void BackgroundWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            VideoListStatusLabel.Visible = false;
+            VideoListProgressBar.Visible = false;
+            VideoListProgressBar.Value = 0;
+
+            if (e.Error != null || e.Cancelled)
+            {
+                GeneralStatusMessage.Text = "Error occurred while parsing video files.";
+                GeneralStatusMessage.Visible = true;
+            }
+            else
+            {
+                VideoTabControl.TabPages.Add(PlaylistsTab);
+            }
+        }
+
+        //Called when a video has finished being parsed
+        private void BackgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            VideoListProgressBar.Value = e.ProgressPercentage;
+        }
+
+        public string GetMimeType(FileInfo fileInfo)
+        {
+            string mimeType = "application/unknown";
+
+            RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(
+                fileInfo.Extension.ToLower()
+                );
+
+            if (regKey != null)
+            {
+                object contentType = regKey.GetValue("Content Type");
+
+                if (contentType != null)
+                    mimeType = contentType.ToString();
+            }
+
+            return mimeType;
         }
 
         //Change logo action
@@ -1350,7 +1476,7 @@ namespace Overlay
         {
             try
             {
-                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " " + videoBox.Text + " MIX 20 EASEINSINE AUTO");
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " \"" + videoBox.Text.Replace("\\", "/") + "\" MIX 20 EASEINSINE AUTO");
                 caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
             }
             catch { }
@@ -1361,7 +1487,7 @@ namespace Overlay
         {
             try
             {
-                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+                caspar_.SendString("STOP " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer);
             } catch { }
         }
 
@@ -1380,7 +1506,7 @@ namespace Overlay
         {
             try
             {
-                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " " + imageBox.Text + " MIX 20 EASEINSINE AUTO");
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " " + imageBox.Text.Replace("\\", "/") + " MIX 20 EASEINSINE AUTO");
                 caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " EMPTY MIX 20 EASEINSINE AUTO");
             }
             catch { }
@@ -1391,8 +1517,7 @@ namespace Overlay
         {
             try
             {
-                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " " + videoBox.Text + " MIX 20 EASEINSINE LOOP");
-                caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " \"" + videoBox.Text.Replace("\\", "/") + "\" CUT 1 EASEINSINE LOOP");
             }
             catch { }
         }
@@ -1404,5 +1529,12 @@ namespace Overlay
             settingsForm.ShowDialog();
         }
         #endregion
+    }
+
+    public class VideoFile
+    {
+        public string CasparPath;
+        public string NetworkPath;
+        public long Duration; // in ms
     }
 }

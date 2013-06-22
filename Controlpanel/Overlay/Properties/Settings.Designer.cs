@@ -349,18 +349,6 @@ namespace Overlay.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\CasparCG\\Server\\media")]
-        public string VideoFolder {
-            get {
-                return ((string)(this["VideoFolder"]));
-            }
-            set {
-                this["VideoFolder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("192.168.0.17")]
         public string CasparCGHostname {
             get {
@@ -419,6 +407,42 @@ namespace Overlay.Properties {
             }
             set {
                 this["CasparCGPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\CasparCG\\CasparCG Server 2.0.3\\Server\\media")]
+        public string VideoFolder {
+            get {
+                return ((string)(this["VideoFolder"]));
+            }
+            set {
+                this["VideoFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int MediaTransitionDuration {
+            get {
+                return ((int)(this["MediaTransitionDuration"]));
+            }
+            set {
+                this["MediaTransitionDuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("MIX")]
+        public string MediaTransitionType {
+            get {
+                return ((string)(this["MediaTransitionType"]));
+            }
+            set {
+                this["MediaTransitionType"] = value;
             }
         }
     }

@@ -32,6 +32,10 @@
             this.buttonConnect = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.GeneralStatusMessage = new System.Windows.Forms.ToolStripStatusLabel();
+            this.VideoListStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.VideoListProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label61 = new System.Windows.Forms.Label();
@@ -210,11 +214,14 @@
             this.label24 = new System.Windows.Forms.Label();
             this.btnClear = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.VideoTabControl = new System.Windows.Forms.TabControl();
+            this.SingleVideoTab = new System.Windows.Forms.TabPage();
             this.panVids = new System.Windows.Forms.Panel();
             this.buttonVidLoop = new System.Windows.Forms.Button();
             this.videoBox = new System.Windows.Forms.ListBox();
             this.buttonStopVid = new System.Windows.Forms.Button();
             this.buttonPlayVid = new System.Windows.Forms.Button();
+            this.PlaylistsTab = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.imageBox = new System.Windows.Forms.ListBox();
@@ -232,6 +239,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTransitionPos)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.VideoTabControl.SuspendLayout();
+            this.SingleVideoTab.SuspendLayout();
             this.panVids.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -258,7 +267,11 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
+            this.toolStripStatusLabel1,
+            this.toolStripStatusLabel2,
+            this.GeneralStatusMessage,
+            this.VideoListStatusLabel,
+            this.VideoListProgressBar});
             this.statusStrip1.Location = new System.Drawing.Point(0, 692);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1694, 22);
@@ -270,6 +283,29 @@
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(31, 17);
+            this.toolStripStatusLabel2.Text = "        ";
+            // 
+            // GeneralStatusMessage
+            // 
+            this.GeneralStatusMessage.Name = "GeneralStatusMessage";
+            this.GeneralStatusMessage.Size = new System.Drawing.Size(0, 17);
+            this.GeneralStatusMessage.Visible = false;
+            // 
+            // VideoListStatusLabel
+            // 
+            this.VideoListStatusLabel.Name = "VideoListStatusLabel";
+            this.VideoListStatusLabel.Size = new System.Drawing.Size(157, 17);
+            this.VideoListStatusLabel.Text = "Loading video information...";
+            // 
+            // VideoListProgressBar
+            // 
+            this.VideoListProgressBar.Name = "VideoListProgressBar";
+            this.VideoListProgressBar.Size = new System.Drawing.Size(100, 16);
             // 
             // openFileDialog1
             // 
@@ -2257,7 +2293,7 @@
             // groupBox6
             // 
             this.groupBox6.BackColor = System.Drawing.Color.SkyBlue;
-            this.groupBox6.Controls.Add(this.panVids);
+            this.groupBox6.Controls.Add(this.VideoTabControl);
             this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox6.Location = new System.Drawing.Point(1403, 44);
             this.groupBox6.Name = "groupBox6";
@@ -2266,6 +2302,27 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Videos";
             // 
+            // VideoTabControl
+            // 
+            this.VideoTabControl.Controls.Add(this.SingleVideoTab);
+            this.VideoTabControl.Controls.Add(this.PlaylistsTab);
+            this.VideoTabControl.Location = new System.Drawing.Point(6, 25);
+            this.VideoTabControl.Name = "VideoTabControl";
+            this.VideoTabControl.SelectedIndex = 0;
+            this.VideoTabControl.Size = new System.Drawing.Size(278, 281);
+            this.VideoTabControl.TabIndex = 0;
+            // 
+            // SingleVideoTab
+            // 
+            this.SingleVideoTab.Controls.Add(this.panVids);
+            this.SingleVideoTab.Location = new System.Drawing.Point(4, 29);
+            this.SingleVideoTab.Name = "SingleVideoTab";
+            this.SingleVideoTab.Padding = new System.Windows.Forms.Padding(3);
+            this.SingleVideoTab.Size = new System.Drawing.Size(270, 248);
+            this.SingleVideoTab.TabIndex = 0;
+            this.SingleVideoTab.Text = "Single";
+            this.SingleVideoTab.UseVisualStyleBackColor = true;
+            // 
             // panVids
             // 
             this.panVids.AutoScroll = true;
@@ -2273,7 +2330,7 @@
             this.panVids.Controls.Add(this.videoBox);
             this.panVids.Controls.Add(this.buttonStopVid);
             this.panVids.Controls.Add(this.buttonPlayVid);
-            this.panVids.Location = new System.Drawing.Point(6, 27);
+            this.panVids.Location = new System.Drawing.Point(3, 3);
             this.panVids.Name = "panVids";
             this.panVids.Size = new System.Drawing.Size(278, 277);
             this.panVids.TabIndex = 0;
@@ -2282,7 +2339,7 @@
             // 
             this.buttonVidLoop.BackColor = System.Drawing.Color.LawnGreen;
             this.buttonVidLoop.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonVidLoop.Location = new System.Drawing.Point(108, 224);
+            this.buttonVidLoop.Location = new System.Drawing.Point(101, 195);
             this.buttonVidLoop.Name = "buttonVidLoop";
             this.buttonVidLoop.Size = new System.Drawing.Size(70, 44);
             this.buttonVidLoop.TabIndex = 211;
@@ -2294,16 +2351,16 @@
             // 
             this.videoBox.FormattingEnabled = true;
             this.videoBox.ItemHeight = 20;
-            this.videoBox.Location = new System.Drawing.Point(16, 14);
+            this.videoBox.Location = new System.Drawing.Point(9, 6);
             this.videoBox.Name = "videoBox";
-            this.videoBox.Size = new System.Drawing.Size(247, 204);
+            this.videoBox.Size = new System.Drawing.Size(247, 184);
             this.videoBox.TabIndex = 210;
             // 
             // buttonStopVid
             // 
             this.buttonStopVid.BackColor = System.Drawing.Color.Red;
             this.buttonStopVid.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonStopVid.Location = new System.Drawing.Point(16, 226);
+            this.buttonStopVid.Location = new System.Drawing.Point(9, 197);
             this.buttonStopVid.Name = "buttonStopVid";
             this.buttonStopVid.Size = new System.Drawing.Size(77, 44);
             this.buttonStopVid.TabIndex = 209;
@@ -2315,13 +2372,23 @@
             // 
             this.buttonPlayVid.BackColor = System.Drawing.Color.LawnGreen;
             this.buttonPlayVid.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPlayVid.Location = new System.Drawing.Point(193, 224);
+            this.buttonPlayVid.Location = new System.Drawing.Point(186, 195);
             this.buttonPlayVid.Name = "buttonPlayVid";
             this.buttonPlayVid.Size = new System.Drawing.Size(70, 44);
             this.buttonPlayVid.TabIndex = 206;
             this.buttonPlayVid.Text = "Play";
             this.buttonPlayVid.UseVisualStyleBackColor = false;
             this.buttonPlayVid.Click += new System.EventHandler(this.buttonPlayVid_Click);
+            // 
+            // PlaylistsTab
+            // 
+            this.PlaylistsTab.Location = new System.Drawing.Point(4, 29);
+            this.PlaylistsTab.Name = "PlaylistsTab";
+            this.PlaylistsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.PlaylistsTab.Size = new System.Drawing.Size(270, 248);
+            this.PlaylistsTab.TabIndex = 1;
+            this.PlaylistsTab.Text = "Playlists";
+            this.PlaylistsTab.UseVisualStyleBackColor = true;
             // 
             // groupBox7
             // 
@@ -2432,6 +2499,8 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
+            this.VideoTabControl.ResumeLayout(false);
+            this.SingleVideoTab.ResumeLayout(false);
             this.panVids.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -2635,6 +2704,13 @@
         private System.Windows.Forms.Button buttonPlayImg;
         private System.Windows.Forms.Button buttonVidLoop;
         private System.Windows.Forms.Button settings_button;
+        private System.Windows.Forms.TabControl VideoTabControl;
+        private System.Windows.Forms.TabPage SingleVideoTab;
+        private System.Windows.Forms.TabPage PlaylistsTab;
+        private System.Windows.Forms.ToolStripProgressBar VideoListProgressBar;
+        private System.Windows.Forms.ToolStripStatusLabel VideoListStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel GeneralStatusMessage;
     }
 }
 

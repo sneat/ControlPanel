@@ -38,13 +38,17 @@
             this.CasparCGNetworkVideoFolderTextBox = new System.Windows.Forms.TextBox();
             this.CasparCGNetworkVideoFolderBrowseButton = new System.Windows.Forms.Button();
             this.RemoteAccessibleToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.LocalVideoFolderTextBox = new System.Windows.Forms.TextBox();
             this.LocalPathToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.CasparCGHostnameTextBox = new System.Windows.Forms.TextBox();
+            this.MediaTransitionComboBox = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.GeneralToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.label9 = new System.Windows.Forms.Label();
+            this.TransitionDurationTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -99,7 +103,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 238);
+            this.label2.Location = new System.Drawing.Point(31, 184);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(80, 13);
             this.label2.TabIndex = 5;
@@ -109,7 +113,7 @@
             // 
             // CasparCGNetworkVideoFolderTextBox
             // 
-            this.CasparCGNetworkVideoFolderTextBox.Location = new System.Drawing.Point(117, 235);
+            this.CasparCGNetworkVideoFolderTextBox.Location = new System.Drawing.Point(117, 181);
             this.CasparCGNetworkVideoFolderTextBox.Name = "CasparCGNetworkVideoFolderTextBox";
             this.CasparCGNetworkVideoFolderTextBox.Size = new System.Drawing.Size(197, 20);
             this.CasparCGNetworkVideoFolderTextBox.TabIndex = 4;
@@ -118,7 +122,7 @@
             // 
             // CasparCGNetworkVideoFolderBrowseButton
             // 
-            this.CasparCGNetworkVideoFolderBrowseButton.Location = new System.Drawing.Point(320, 233);
+            this.CasparCGNetworkVideoFolderBrowseButton.Location = new System.Drawing.Point(320, 179);
             this.CasparCGNetworkVideoFolderBrowseButton.Name = "CasparCGNetworkVideoFolderBrowseButton";
             this.CasparCGNetworkVideoFolderBrowseButton.Size = new System.Drawing.Size(75, 23);
             this.CasparCGNetworkVideoFolderBrowseButton.TabIndex = 5;
@@ -130,33 +134,6 @@
             // 
             this.RemoteAccessibleToolTip.ToolTipTitle = "Remote accessible paths must be accessible via this machine";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 160);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Local Paths:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(31, 179);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(80, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Media Full Path";
-            this.LocalPathToolTip.SetToolTip(this.label4, "e.g. C:\\CasparCG\\Server\\media");
-            // 
-            // LocalVideoFolderTextBox
-            // 
-            this.LocalVideoFolderTextBox.Location = new System.Drawing.Point(117, 176);
-            this.LocalVideoFolderTextBox.Name = "LocalVideoFolderTextBox";
-            this.LocalVideoFolderTextBox.Size = new System.Drawing.Size(223, 20);
-            this.LocalVideoFolderTextBox.TabIndex = 3;
-            this.LocalPathToolTip.SetToolTip(this.LocalVideoFolderTextBox, "e.g. C:\\CasparCG\\Server\\media");
-            // 
             // LocalPathToolTip
             // 
             this.LocalPathToolTip.ToolTipTitle = "Local paths are relative to the machine running CasparCG";
@@ -164,7 +141,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 216);
+            this.label5.Location = new System.Drawing.Point(12, 162);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(131, 13);
             this.label5.TabIndex = 11;
@@ -186,6 +163,70 @@
             this.CasparCGHostnameTextBox.Size = new System.Drawing.Size(100, 20);
             this.CasparCGHostnameTextBox.TabIndex = 1;
             // 
+            // MediaTransitionComboBox
+            // 
+            this.MediaTransitionComboBox.FormattingEnabled = true;
+            this.MediaTransitionComboBox.Items.AddRange(new object[] {
+            "CUT",
+            "MIX",
+            "PUSH",
+            "WIPE",
+            "SLIDE"});
+            this.MediaTransitionComboBox.Location = new System.Drawing.Point(71, 232);
+            this.MediaTransitionComboBox.Name = "MediaTransitionComboBox";
+            this.MediaTransitionComboBox.Size = new System.Drawing.Size(121, 21);
+            this.MediaTransitionComboBox.TabIndex = 13;
+            this.GeneralToolTip.SetToolTip(this.MediaTransitionComboBox, "This is the type of transition that will be used.");
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(15, 215);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(93, 13);
+            this.label7.TabIndex = 14;
+            this.label7.Text = "Media Transitions:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(34, 235);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(31, 13);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Type";
+            this.GeneralToolTip.SetToolTip(this.label8, "This is the type of transition that will be used.");
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(34, 263);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(47, 13);
+            this.label9.TabIndex = 16;
+            this.label9.Text = "Duration";
+            this.GeneralToolTip.SetToolTip(this.label9, "The duration that the transition should take. Minimum of 1.\r\nUse 1 if you are usi" +
+        "ng CUT.");
+            // 
+            // TransitionDurationTextBox
+            // 
+            this.TransitionDurationTextBox.Location = new System.Drawing.Point(87, 259);
+            this.TransitionDurationTextBox.Name = "TransitionDurationTextBox";
+            this.TransitionDurationTextBox.Size = new System.Drawing.Size(56, 20);
+            this.TransitionDurationTextBox.TabIndex = 17;
+            this.GeneralToolTip.SetToolTip(this.TransitionDurationTextBox, "The duration that the transition should take. Minimum of 1.\r\nUse 1 if you are usi" +
+        "ng CUT.");
+            this.TransitionDurationTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.TransitionDurationTextBox_Validating);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(149, 263);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(20, 13);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "ms";
+            // 
             // Settings
             // 
             this.AcceptButton = this.SettingFormSaveButton;
@@ -193,12 +234,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.SettingsFormCancelButton;
             this.ClientSize = new System.Drawing.Size(560, 378);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.TransitionDurationTextBox);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.MediaTransitionComboBox);
             this.Controls.Add(this.CasparCGHostnameTextBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.LocalVideoFolderTextBox);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.CasparCGNetworkVideoFolderBrowseButton);
             this.Controls.Add(this.CasparCGNetworkVideoFolderTextBox);
             this.Controls.Add(this.label2);
@@ -228,12 +272,16 @@
         private System.Windows.Forms.TextBox CasparCGNetworkVideoFolderTextBox;
         private System.Windows.Forms.Button CasparCGNetworkVideoFolderBrowseButton;
         private System.Windows.Forms.ToolTip RemoteAccessibleToolTip;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox LocalVideoFolderTextBox;
         private System.Windows.Forms.ToolTip LocalPathToolTip;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox CasparCGHostnameTextBox;
+        private System.Windows.Forms.ComboBox MediaTransitionComboBox;
+        private System.Windows.Forms.ToolTip GeneralToolTip;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox TransitionDurationTextBox;
+        private System.Windows.Forms.Label label3;
     }
 }
