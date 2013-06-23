@@ -66,6 +66,7 @@ namespace Overlay
         //Video parsing
         private List<FileInfo> VideoFiles = new List<FileInfo>();
         private Dictionary<string, VideoFile> ParsedVideoFiles = new Dictionary<string, VideoFile>();
+        private String SelectedSingleVideo;
 
         //Threading
         static BackgroundWorker BackgroundWorker = new BackgroundWorker();
@@ -229,6 +230,7 @@ namespace Overlay
             toolStripStatusLabel1.Text = "Disconnected from " + caspar_.Settings.Hostname; // Properties.Settings.Default.CasparCGHostname;
 
             disableControls();
+            // TODO Media list info causes error when trying to re-load the information. Need to clear out the lists of media files etc.
         }
 
         // update text on button
@@ -633,20 +635,36 @@ namespace Overlay
         //Populate video comboboxes
         private void popVidBox()
         {
-            PlaylistsTab.Enabled = false;
             Boolean HasVideos = false;
             int range = caspar_.Mediafiles.Count;
+
+            videoBox.AutoGenerateColumns = false;
+            DataGridViewTextBoxColumn nameColumn = new DataGridViewTextBoxColumn();
+            nameColumn.DataPropertyName = "CasparPath";
+            nameColumn.HeaderText = "Name";
+            nameColumn.Name = "VideoBoxName";
+            nameColumn.ReadOnly = true;
+            DataGridViewTextBoxColumn durationColumn = new DataGridViewTextBoxColumn();
+            durationColumn.DataPropertyName = "DurationString";
+            durationColumn.HeaderText = "Duration";
+            durationColumn.ReadOnly = true;
+            durationColumn.FillWeight = 40;
+            videoBox.Columns.Add(nameColumn);
+            videoBox.Columns.Add(durationColumn);
+
             for (int i = 0; i < range; i++)
             {
                 Svt.Caspar.MediaInfo item = caspar_.Mediafiles[i];
 
                 string filename = item.ToString();
                 string filetype = item.Type.ToString();
-                Console.WriteLine("Filename from Capsar {0}", item.ToString());
 
                 if (filetype == "MOVIE")
                 {
-                    videoBox.Items.Add(filename);
+                    VideoFile VideoFile = new VideoFile();
+                    VideoFile.CasparPath = filename;
+                    ParsedVideoFiles.Add(filename, VideoFile);
+                    Console.WriteLine("Adding {0}", filename);
                     HasVideos = true;
                 }
                 else
@@ -654,6 +672,10 @@ namespace Overlay
                     imageBox.Items.Add(filename);
                 }
             }
+
+            videoBox.DataSource = ParsedVideoFiles.Values.ToArray();
+
+            //videoBox.ResetBindings();
             if (HasVideos && Properties.Settings.Default.NetworkVideoFolder.Length > 0 && range > 0)
             {
                 DirectoryInfo dinfo = new DirectoryInfo(@Properties.Settings.Default.NetworkVideoFolder);
@@ -662,8 +684,8 @@ namespace Overlay
                 foreach (FileInfo file in Files)
                 {
                         String name = ConvertNetworkPathToCasparPath(file);
-                        // Check to make sure it is a video and exists for CasparCG
-                        if (GetMimeType(file).StartsWith("video/") && videoBox.Items.Contains(name))
+                        // Check to make sure it is a video
+                        if (GetMimeType(file).StartsWith("video/"))
                         {
                             VideoFiles.Add(file);
                         }
@@ -699,13 +721,14 @@ namespace Overlay
                 i++;
                 MediaFile mFile = new MediaFile(file.FullName);
 
-                VideoFile VideoFile = new VideoFile();
-                String CasparCgPath = ConvertNetworkPathToCasparPath(file);
-                VideoFile.CasparPath = CasparCgPath;
+                VideoFile VideoFile = ParsedVideoFiles[ConvertNetworkPathToCasparPath(file)];
                 VideoFile.NetworkPath = file.FullName;
                 VideoFile.Duration = mFile.General.DurationMillis;
+                VideoFile.DurationString = TimeSpan.FromMilliseconds(VideoFile.Duration).ToString(@"mm\:ss");
+                Console.WriteLine("{0} {1}", file.Name, VideoFile.DurationString);
 
-                ParsedVideoFiles.Add(CasparCgPath, VideoFile);
+                ParsedVideoFiles[ConvertNetworkPathToCasparPath(file)] = VideoFile;
+                videoBox.NotifyCurrentCellDirty(true);
 
                 //Determine percentage progress completed
                 int progress = Convert.ToInt32(Math.Round(((double)i / (double)total) * 100d));
@@ -729,6 +752,7 @@ namespace Overlay
             else
             {
                 VideoTabControl.TabPages.Add(PlaylistsTab);
+                videoBox.Update();
             }
         }
 
@@ -1474,12 +1498,15 @@ namespace Overlay
         //Play selected video - fades to EMPTY after ended
         private void buttonPlayVid_Click(object sender, EventArgs e)
         {
-            try
+            if (SelectedSingleVideo != null)
             {
-                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " \"" + videoBox.Text.Replace("\\", "/") + "\" MIX 20 EASEINSINE AUTO");
-                caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+                try
+                {
+                    caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " \"" + SelectedSingleVideo.Replace("\\", "/") + "\" MIX 20 EASEINSINE AUTO");
+                    caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+                }
+                catch { }
             }
-            catch { }
         }
 
         //Stop current video
@@ -1515,11 +1542,14 @@ namespace Overlay
         //Loops the marked video
         private void buttonVidLoop_Click(object sender, EventArgs e)
         {
-            try
+            if (SelectedSingleVideo != null)
             {
-                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " \"" + videoBox.Text.Replace("\\", "/") + "\" CUT 1 EASEINSINE LOOP");
+                try
+                {
+                    caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " \"" + SelectedSingleVideo.Replace("\\", "/") + "\" CUT 1 EASEINSINE LOOP");
+                }
+                catch { }
             }
-            catch { }
         }
 
         //Opens the settings dialog
@@ -1529,12 +1559,79 @@ namespace Overlay
             settingsForm.ShowDialog();
         }
         #endregion
+
+        // Keep track of which single video is selected for playing
+        private void videoBox_SelectionChanged(object sender, EventArgs e)
+        {
+            //SelectedSingleVideo
+            if (videoBox.SelectedCells.Count > 0)
+            {
+                int selectedrowindex = videoBox.SelectedCells[0].RowIndex;
+
+                DataGridViewRow selectedRow = videoBox.Rows[selectedrowindex];
+
+                SelectedSingleVideo = Convert.ToString(selectedRow.Cells["VideoBoxName"].Value);
+                Console.WriteLine("Selected {0}", SelectedSingleVideo);
+            }
+            else
+            {
+                SelectedSingleVideo = null;
+            }
+        }
     }
 
-    public class VideoFile
+    public class VideoFile : INotifyPropertyChanged
     {
-        public string CasparPath;
-        public string NetworkPath;
-        public long Duration; // in ms
+        private string _CasparPath;
+        private string _NetworkPath;
+        private long _Duration; // in ms
+        private string _DurationString;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public string CasparPath
+        {
+            get { return _CasparPath; }
+            set
+            {
+                _CasparPath = value;
+                OnPropertyChanged("CasparPath");
+            }
+        }
+
+        public string NetworkPath
+        {
+            get { return _NetworkPath; }
+            set
+            {
+                _NetworkPath = value;
+                OnPropertyChanged("NetworkPath");
+            }
+        }
+
+        public long Duration
+        {
+            get { return _Duration; }
+            set
+            {
+                _Duration = value;
+                OnPropertyChanged("Duration");
+            }
+        }
+
+        public string DurationString
+        {
+            get { return _DurationString; }
+            set
+            {
+                _DurationString = value;
+                OnPropertyChanged("DurationString");
+            }
+        }
     }
 }

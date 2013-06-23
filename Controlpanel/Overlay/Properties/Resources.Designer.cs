@@ -62,7 +62,7 @@ namespace Overlay.Properties {
         
         internal static System.Drawing.Bitmap CasparCG_Logo {
             get {
-                object obj = ResourceManager.GetObject("CasparCG Logo", resourceCulture);
+                object obj = ResourceManager.GetObject("CasparCG_Logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

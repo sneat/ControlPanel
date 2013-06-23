@@ -217,11 +217,16 @@
             this.VideoTabControl = new System.Windows.Forms.TabControl();
             this.SingleVideoTab = new System.Windows.Forms.TabPage();
             this.panVids = new System.Windows.Forms.Panel();
+            this.videoBox = new System.Windows.Forms.DataGridView();
             this.buttonVidLoop = new System.Windows.Forms.Button();
-            this.videoBox = new System.Windows.Forms.ListBox();
             this.buttonStopVid = new System.Windows.Forms.Button();
             this.buttonPlayVid = new System.Windows.Forms.Button();
             this.PlaylistsTab = new System.Windows.Forms.TabPage();
+            this.PlaylistPlay = new System.Windows.Forms.Button();
+            this.PlaylistDeleteButton = new System.Windows.Forms.Button();
+            this.PlaylistEditButton = new System.Windows.Forms.Button();
+            this.PlaylistAddButton = new System.Windows.Forms.Button();
+            this.PlaylistDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.imageBox = new System.Windows.Forms.ListBox();
@@ -242,6 +247,9 @@
             this.VideoTabControl.SuspendLayout();
             this.SingleVideoTab.SuspendLayout();
             this.panVids.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.videoBox)).BeginInit();
+            this.PlaylistsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PlaylistDataGridView)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -2326,14 +2334,30 @@
             // panVids
             // 
             this.panVids.AutoScroll = true;
-            this.panVids.Controls.Add(this.buttonVidLoop);
             this.panVids.Controls.Add(this.videoBox);
+            this.panVids.Controls.Add(this.buttonVidLoop);
             this.panVids.Controls.Add(this.buttonStopVid);
             this.panVids.Controls.Add(this.buttonPlayVid);
             this.panVids.Location = new System.Drawing.Point(3, 3);
             this.panVids.Name = "panVids";
             this.panVids.Size = new System.Drawing.Size(278, 277);
             this.panVids.TabIndex = 0;
+            // 
+            // videoBox
+            // 
+            this.videoBox.AllowUserToAddRows = false;
+            this.videoBox.AllowUserToDeleteRows = false;
+            this.videoBox.AllowUserToResizeRows = false;
+            this.videoBox.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.videoBox.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.videoBox.Location = new System.Drawing.Point(9, 8);
+            this.videoBox.Name = "videoBox";
+            this.videoBox.ReadOnly = true;
+            this.videoBox.RowHeadersVisible = false;
+            this.videoBox.ShowEditingIcon = false;
+            this.videoBox.Size = new System.Drawing.Size(247, 181);
+            this.videoBox.TabIndex = 212;
+            this.videoBox.SelectionChanged += new System.EventHandler(this.videoBox_SelectionChanged);
             // 
             // buttonVidLoop
             // 
@@ -2346,15 +2370,6 @@
             this.buttonVidLoop.Text = "Loop";
             this.buttonVidLoop.UseVisualStyleBackColor = false;
             this.buttonVidLoop.Click += new System.EventHandler(this.buttonVidLoop_Click);
-            // 
-            // videoBox
-            // 
-            this.videoBox.FormattingEnabled = true;
-            this.videoBox.ItemHeight = 20;
-            this.videoBox.Location = new System.Drawing.Point(9, 6);
-            this.videoBox.Name = "videoBox";
-            this.videoBox.Size = new System.Drawing.Size(247, 184);
-            this.videoBox.TabIndex = 210;
             // 
             // buttonStopVid
             // 
@@ -2382,6 +2397,11 @@
             // 
             // PlaylistsTab
             // 
+            this.PlaylistsTab.Controls.Add(this.PlaylistPlay);
+            this.PlaylistsTab.Controls.Add(this.PlaylistDeleteButton);
+            this.PlaylistsTab.Controls.Add(this.PlaylistEditButton);
+            this.PlaylistsTab.Controls.Add(this.PlaylistAddButton);
+            this.PlaylistsTab.Controls.Add(this.PlaylistDataGridView);
             this.PlaylistsTab.Location = new System.Drawing.Point(4, 29);
             this.PlaylistsTab.Name = "PlaylistsTab";
             this.PlaylistsTab.Padding = new System.Windows.Forms.Padding(3);
@@ -2389,6 +2409,53 @@
             this.PlaylistsTab.TabIndex = 1;
             this.PlaylistsTab.Text = "Playlists";
             this.PlaylistsTab.UseVisualStyleBackColor = true;
+            // 
+            // PlaylistPlay
+            // 
+            this.PlaylistPlay.Enabled = false;
+            this.PlaylistPlay.Location = new System.Drawing.Point(210, 181);
+            this.PlaylistPlay.Name = "PlaylistPlay";
+            this.PlaylistPlay.Size = new System.Drawing.Size(49, 62);
+            this.PlaylistPlay.TabIndex = 4;
+            this.PlaylistPlay.Text = "Play";
+            this.PlaylistPlay.UseVisualStyleBackColor = true;
+            // 
+            // PlaylistDeleteButton
+            // 
+            this.PlaylistDeleteButton.Enabled = false;
+            this.PlaylistDeleteButton.Location = new System.Drawing.Point(210, 79);
+            this.PlaylistDeleteButton.Name = "PlaylistDeleteButton";
+            this.PlaylistDeleteButton.Size = new System.Drawing.Size(54, 31);
+            this.PlaylistDeleteButton.TabIndex = 3;
+            this.PlaylistDeleteButton.Text = "Del";
+            this.PlaylistDeleteButton.UseVisualStyleBackColor = true;
+            // 
+            // PlaylistEditButton
+            // 
+            this.PlaylistEditButton.Enabled = false;
+            this.PlaylistEditButton.Location = new System.Drawing.Point(210, 41);
+            this.PlaylistEditButton.Name = "PlaylistEditButton";
+            this.PlaylistEditButton.Size = new System.Drawing.Size(54, 34);
+            this.PlaylistEditButton.TabIndex = 2;
+            this.PlaylistEditButton.Text = "Edit";
+            this.PlaylistEditButton.UseVisualStyleBackColor = true;
+            // 
+            // PlaylistAddButton
+            // 
+            this.PlaylistAddButton.Location = new System.Drawing.Point(209, 5);
+            this.PlaylistAddButton.Name = "PlaylistAddButton";
+            this.PlaylistAddButton.Size = new System.Drawing.Size(55, 32);
+            this.PlaylistAddButton.TabIndex = 1;
+            this.PlaylistAddButton.Text = "Add";
+            this.PlaylistAddButton.UseVisualStyleBackColor = true;
+            // 
+            // PlaylistDataGridView
+            // 
+            this.PlaylistDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.PlaylistDataGridView.Location = new System.Drawing.Point(6, 6);
+            this.PlaylistDataGridView.Name = "PlaylistDataGridView";
+            this.PlaylistDataGridView.Size = new System.Drawing.Size(197, 236);
+            this.PlaylistDataGridView.TabIndex = 0;
             // 
             // groupBox7
             // 
@@ -2502,6 +2569,9 @@
             this.VideoTabControl.ResumeLayout(false);
             this.SingleVideoTab.ResumeLayout(false);
             this.panVids.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.videoBox)).EndInit();
+            this.PlaylistsTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PlaylistDataGridView)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -2696,7 +2766,6 @@
         private System.Windows.Forms.Button buttonStopVid;
         private System.Windows.Forms.Label label69;
         private System.Windows.Forms.TextBox stingDelay;
-        private System.Windows.Forms.ListBox videoBox;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ListBox imageBox;
@@ -2711,6 +2780,12 @@
         private System.Windows.Forms.ToolStripStatusLabel VideoListStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel GeneralStatusMessage;
+        private System.Windows.Forms.DataGridView PlaylistDataGridView;
+        private System.Windows.Forms.Button PlaylistPlay;
+        private System.Windows.Forms.Button PlaylistDeleteButton;
+        private System.Windows.Forms.Button PlaylistEditButton;
+        private System.Windows.Forms.Button PlaylistAddButton;
+        private System.Windows.Forms.DataGridView videoBox;
     }
 }
 
