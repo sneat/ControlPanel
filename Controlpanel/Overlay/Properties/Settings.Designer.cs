@@ -68,12 +68,15 @@ namespace Overlay.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int CasparChannel {
             get {
                 return ((int)(this["CasparChannel"]));
+            }
+            set {
+                this["CasparChannel"] = value;
             }
         }
         
@@ -443,6 +446,18 @@ namespace Overlay.Properties {
             }
             set {
                 this["MediaTransitionType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("linear")]
+        public string MediaTransitionAnimationType {
+            get {
+                return ((string)(this["MediaTransitionAnimationType"]));
+            }
+            set {
+                this["MediaTransitionAnimationType"] = value;
             }
         }
     }

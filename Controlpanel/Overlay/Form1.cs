@@ -48,7 +48,7 @@ namespace Overlay
         private int _initSchedule;
         private int[] _initPreset = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         private string flashCmd;
-        private System.Timers.Timer aTimer;
+        private System.Timers.Timer stingerTimer;
 
         //BMD Objects
         private IBMDSwitcherDiscovery m_switcherDiscovery;
@@ -67,9 +67,11 @@ namespace Overlay
         private List<FileInfo> VideoFiles = new List<FileInfo>();
         private Dictionary<string, VideoFile> ParsedVideoFiles = new Dictionary<string, VideoFile>();
         private String SelectedSingleVideo;
-
-        //Threading
-        static BackgroundWorker BackgroundWorker = new BackgroundWorker();
+        public Dictionary<string, Playlist> Playlists = new Dictionary<string, Playlist>();
+        private String CurrentlyPlayingPlaylist = null;
+        private static long playlistCountdown = 0;
+        private static System.Windows.Forms.Timer playlistTimer;
+        private static Queue<VideoFile> VideoQueue = new Queue<VideoFile>();
         #endregion
 
         #region constructor
@@ -639,6 +641,7 @@ namespace Overlay
             int range = caspar_.Mediafiles.Count;
 
             videoBox.AutoGenerateColumns = false;
+            videoBox.Columns.Clear();
             DataGridViewTextBoxColumn nameColumn = new DataGridViewTextBoxColumn();
             nameColumn.DataPropertyName = "CasparPath";
             nameColumn.HeaderText = "Name";
@@ -696,89 +699,13 @@ namespace Overlay
                     VideoListStatusLabel.Visible = true;
                     VideoListProgressBar.Visible = true;
 
-                    BackgroundWorker.DoWork += ParseVideoFiles;
-                    BackgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
-                    BackgroundWorker.RunWorkerCompleted += BackgroundWorker_Completed;
-                    BackgroundWorker.WorkerReportsProgress = true;
-                    BackgroundWorker.RunWorkerAsync();
+                    VideoParserBackgroundWorker.DoWork += ParseVideoFiles;
+                    VideoParserBackgroundWorker.ProgressChanged += VideoParserBackgroundWorker_ProgressChanged;
+                    VideoParserBackgroundWorker.RunWorkerCompleted += VideoParserBackgroundWorker_Completed;
+                    VideoParserBackgroundWorker.WorkerReportsProgress = true;
+                    VideoParserBackgroundWorker.RunWorkerAsync();
                 }
             }
-        }
-
-        //Convert UNC file path to filename for use within CasparCG
-        public String ConvertNetworkPathToCasparPath(FileInfo file)
-        {
-            return file.FullName.Replace(Properties.Settings.Default.NetworkVideoFolder + "\\", "").Replace(file.Extension, "").ToUpper();
-        }
-
-        //Read video files over network to get duration
-        private void ParseVideoFiles(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            int total = VideoFiles.Count();
-            int i = 0;
-            foreach (FileInfo file in VideoFiles)
-            {
-                i++;
-                MediaFile mFile = new MediaFile(file.FullName);
-
-                VideoFile VideoFile = ParsedVideoFiles[ConvertNetworkPathToCasparPath(file)];
-                VideoFile.NetworkPath = file.FullName;
-                VideoFile.Duration = mFile.General.DurationMillis;
-                VideoFile.DurationString = TimeSpan.FromMilliseconds(VideoFile.Duration).ToString(@"mm\:ss");
-                Console.WriteLine("{0} {1}", file.Name, VideoFile.DurationString);
-
-                ParsedVideoFiles[ConvertNetworkPathToCasparPath(file)] = VideoFile;
-                videoBox.NotifyCurrentCellDirty(true);
-
-                //Determine percentage progress completed
-                int progress = Convert.ToInt32(Math.Round(((double)i / (double)total) * 100d));
-                BackgroundWorker.ReportProgress(progress);
-
-            }
-        }
-
-        //Called when background video parser completed
-        private void BackgroundWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
-        {
-            VideoListStatusLabel.Visible = false;
-            VideoListProgressBar.Visible = false;
-            VideoListProgressBar.Value = 0;
-
-            if (e.Error != null || e.Cancelled)
-            {
-                GeneralStatusMessage.Text = "Error occurred while parsing video files.";
-                GeneralStatusMessage.Visible = true;
-            }
-            else
-            {
-                VideoTabControl.TabPages.Add(PlaylistsTab);
-                videoBox.Update();
-            }
-        }
-
-        //Called when a video has finished being parsed
-        private void BackgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
-        {
-            VideoListProgressBar.Value = e.ProgressPercentage;
-        }
-
-        public string GetMimeType(FileInfo fileInfo)
-        {
-            string mimeType = "application/unknown";
-
-            RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(
-                fileInfo.Extension.ToLower()
-                );
-
-            if (regKey != null)
-            {
-                object contentType = regKey.GetValue("Content Type");
-
-                if (contentType != null)
-                    mimeType = contentType.ToString();
-            }
-
-            return mimeType;
         }
 
         //Change logo action
@@ -1350,7 +1277,7 @@ namespace Overlay
             //Perform in main thread
             del doCut = new del(m_mixEffectBlock1.PerformCut);
             Invoke(doCut);
-            aTimer.Enabled = false;
+            stingerTimer.Enabled = false;
         }
         #endregion
 
@@ -1475,8 +1402,8 @@ namespace Overlay
             try
             {
                 //Set delay and end-action
-                aTimer = new System.Timers.Timer(Convert.ToInt32(stingDelay.Text));
-                aTimer.Elapsed += new ElapsedEventHandler(this.endSting);
+                stingerTimer = new System.Timers.Timer(Convert.ToInt32(stingDelay.Text));
+                stingerTimer.Elapsed += new ElapsedEventHandler(this.endSting);
 
                 caspar_.SendString(flashCmd + " ADD " + Properties.Settings.Default.LayerSting + " " + Properties.Settings.Default.TemplateSting + " 1");
             }
@@ -1485,7 +1412,7 @@ namespace Overlay
             }
             finally
             {
-                aTimer.Enabled = true;
+                stingerTimer.Enabled = true;
             }
         }
 
@@ -1502,8 +1429,8 @@ namespace Overlay
             {
                 try
                 {
-                    caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " \"" + SelectedSingleVideo.Replace("\\", "/") + "\" MIX 20 EASEINSINE AUTO");
-                    caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+                    caspar_.SendString(String.Format("PLAY {0}-{1} \"{2}\" {3} {4} {5}", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer, SelectedSingleVideo.Replace("\\", "/"), Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
+                    caspar_.SendString(String.Format("LOADBG {0}-{1} EMPTY {2} {3} {4} AUTO", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer, Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
                 }
                 catch { }
             }
@@ -1514,7 +1441,7 @@ namespace Overlay
         {
             try
             {
-                caspar_.SendString("STOP " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer);
+                caspar_.SendString(String.Format("STOP {0}-{1}", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer));
             } catch { }
         }
 
@@ -1523,7 +1450,7 @@ namespace Overlay
         {
             try
             {
-                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+                caspar_.SendString(String.Format("PLAY {0}-{1} EMPTY {2} {3} {4} AUTO", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.ImgLayer, Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
             }
             catch { }
         }
@@ -1533,8 +1460,8 @@ namespace Overlay
         {
             try
             {
-                caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " " + imageBox.Text.Replace("\\", "/") + " MIX 20 EASEINSINE AUTO");
-                caspar_.SendString("LOADBG " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.ImgLayer + " EMPTY MIX 20 EASEINSINE AUTO");
+                caspar_.SendString(String.Format("PLAY {0}-{1} \"{2}\" {3} {4} {5}", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.ImgLayer, imageBox.Text.Replace("\\", "/"), Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
+                caspar_.SendString(String.Format("LOADBG {0}-{1} EMPTY {2} {3} {4} AUTO", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.ImgLayer, Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
             }
             catch { }
         }
@@ -1546,7 +1473,7 @@ namespace Overlay
             {
                 try
                 {
-                    caspar_.SendString("PLAY " + Properties.Settings.Default.CasparChannel + "-" + Properties.Settings.Default.VideoLayer + " \"" + SelectedSingleVideo.Replace("\\", "/") + "\" CUT 1 EASEINSINE LOOP");
+                    caspar_.SendString(String.Format("PLAY {0}-{1} \"{2}\" CUT 1 LINEAR LOOP", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer, SelectedSingleVideo.Replace("\\", "/")));    
                 }
                 catch { }
             }
@@ -1560,24 +1487,208 @@ namespace Overlay
         }
         #endregion
 
+        #region Video/playlist functionality
+
+        //Convert UNC file path to filename for use within CasparCG
+        public String ConvertNetworkPathToCasparPath(FileInfo file)
+        {
+            return file.FullName.Replace(Properties.Settings.Default.NetworkVideoFolder + "\\", "").Replace(file.Extension, "").ToUpper();
+        }
+
+        //Read video files over network to get duration
+        private void ParseVideoFiles(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            int total = VideoFiles.Count();
+            int i = 0;
+            foreach (FileInfo file in VideoFiles)
+            {
+                i++;
+                MediaFile mFile = new MediaFile(file.FullName);
+
+                VideoFile VideoFile = ParsedVideoFiles[ConvertNetworkPathToCasparPath(file)];
+                VideoFile.NetworkPath = file.FullName;
+                VideoFile.Duration = mFile.General.DurationMillis;
+                VideoFile.DurationString = TimeSpan.FromMilliseconds(VideoFile.Duration).ToString(@"mm\:ss");
+
+                ParsedVideoFiles[ConvertNetworkPathToCasparPath(file)] = VideoFile;
+                videoBox.NotifyCurrentCellDirty(true);
+
+                int progress = Convert.ToInt32(Math.Round(((double)i / (double)total) * 100d));
+                VideoParserBackgroundWorker.ReportProgress(progress);
+            }
+        }
+
+        //Called when background video parser completed
+        private void VideoParserBackgroundWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            VideoListStatusLabel.Visible = false;
+            VideoListProgressBar.Visible = false;
+            VideoListProgressBar.Value = 0;
+
+            if (e.Error != null || e.Cancelled)
+            {
+                GeneralStatusMessage.Text = "Error occurred while parsing video files.";
+                GeneralStatusMessage.Visible = true;
+            }
+            else
+            {
+                VideoTabControl.TabPages.Add(PlaylistsTab);
+                videoBox.Update();
+            }
+        }
+
+        //Called when a video has finished being parsed
+        private void VideoParserBackgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            VideoListProgressBar.Value = e.ProgressPercentage;
+        }
+
+        public string GetMimeType(FileInfo fileInfo)
+        {
+            string mimeType = "application/unknown";
+
+            RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(
+                fileInfo.Extension.ToLower()
+                );
+
+            if (regKey != null)
+            {
+                object contentType = regKey.GetValue("Content Type");
+
+                if (contentType != null)
+                    mimeType = contentType.ToString();
+            }
+
+            return mimeType;
+        }
+
         // Keep track of which single video is selected for playing
         private void videoBox_SelectionChanged(object sender, EventArgs e)
         {
             //SelectedSingleVideo
-            if (videoBox.SelectedCells.Count > 0)
+            if (videoBox.SelectedCells.Count == 1)
             {
                 int selectedrowindex = videoBox.SelectedCells[0].RowIndex;
 
                 DataGridViewRow selectedRow = videoBox.Rows[selectedrowindex];
 
                 SelectedSingleVideo = Convert.ToString(selectedRow.Cells["VideoBoxName"].Value);
-                Console.WriteLine("Selected {0}", SelectedSingleVideo);
             }
             else
             {
                 SelectedSingleVideo = null;
             }
         }
+
+        private void PlaylistAddButton_Click(object sender, EventArgs e)
+        {
+            PlaylistForm Playlist = new PlaylistForm(this, ParsedVideoFiles, PlaylistDragAndDropListView);
+            Playlist.ShowDialog();
+        }
+
+        private void PlaylistDragAndDropListView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (PlaylistDragAndDropListView.SelectedItems.Count == 1)
+            {
+                PlaylistPlay.Enabled = true;
+                if (PlaylistDragAndDropListView.SelectedItems[0].Text != CurrentlyPlayingPlaylist)
+                {
+                    PlaylistEditButton.Enabled = true;
+                    PlaylistDeleteButton.Enabled = true;
+                }
+                else
+                {
+                    PlaylistEditButton.Enabled = false;
+                    PlaylistDeleteButton.Enabled = false;
+                }
+            }
+            else
+            {
+                PlaylistPlay.Enabled = false;
+                PlaylistEditButton.Enabled = false;
+                PlaylistDeleteButton.Enabled = false;
+            }
+        }
+
+        private void PlaylistPlay_Click(object sender, EventArgs e)
+        {
+            if (PlaylistDragAndDropListView.SelectedItems.Count == 1)
+            {
+                if (CurrentlyPlayingPlaylist != null)
+                {
+                    // Already playing something. Stop it.
+                    PlaylistStop.PerformClick();
+                }
+
+                Playlist _playlist = Playlists[PlaylistDragAndDropListView.SelectedItems[0].Text];
+                foreach (KeyValuePair<string, long> item in _playlist.Items)
+                {
+                    VideoFile VideoFile = ParsedVideoFiles[item.Key];
+                    VideoQueue.Enqueue(VideoFile);
+                }
+                CurrentlyPlayingPlaylist = _playlist.Name;
+                playlistCountdown = _playlist.Duration;
+                Console.WriteLine("Time starting is {0}ms", playlistCountdown);
+                VideoCountdownTimer.ForeColor = SystemColors.ControlText;
+                VideoCountdownTimer.Text = _playlist.DurationString;
+                VideoCountdownTimer.Visible = true;
+                PlaylistStop.Enabled = true;
+                playlistTimer = new System.Windows.Forms.Timer();
+                playlistTimer.Interval = 1000;
+                playlistTimer.Tick += new EventHandler(playlistTimerTick);
+                playlistTimer.Start();
+            }
+        }
+
+        private void playlistTimerTick(object source, EventArgs e)
+        {
+            playlistCountdown -= 1000;
+            Console.WriteLine("Time left is {0}ms", playlistCountdown);
+            if (playlistCountdown < 0)
+            {
+                PlaylistStop.PerformClick();
+            }
+            else
+            {
+                VideoCountdownTimer.Text = PlaylistForm.ConvertMilisecondsToString(playlistCountdown);
+            }
+        }
+
+        private void PlaylistStop_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                VideoQueue.Clear();
+                CurrentlyPlayingPlaylist = null;
+                PlaylistStop.Enabled = false;
+                playlistTimer.Enabled = false;
+                VideoCountdownTimer.ForeColor = SystemColors.ControlText;
+                VideoCountdownTimer.Text = "00:00";
+                VideoCountdownTimer.Visible = false;
+                caspar_.SendString(String.Format("STOP {0}-{1}", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer));
+            }
+            catch { }
+        }
+
+        private void PlaylistCountdownTimer_TextChanged(object sender, EventArgs e)
+        {
+            long seconds = 0;
+            if (VideoCountdownTimer.Text != "")
+            {
+                String[] parts = VideoCountdownTimer.Text.Split(':');
+                if (parts.Count() > 0)
+                {
+                    int minutes = Convert.ToInt32(parts[0]);
+                    seconds += minutes * 60;
+                    seconds += Convert.ToInt32(parts[1]);
+                    if (seconds <= 10)
+                    {
+                        VideoCountdownTimer.ForeColor = System.Drawing.Color.Red;
+                    }
+                }
+            }
+        }
+        #endregion
     }
 
     public class VideoFile : INotifyPropertyChanged
@@ -1632,6 +1743,23 @@ namespace Overlay
                 _DurationString = value;
                 OnPropertyChanged("DurationString");
             }
+        }
+    }
+
+    public class Playlist
+    {
+        // key properties
+        public String Name { get; private set; }
+        public long Duration { get; private set; }
+        public String DurationString { get; private set; }
+        public List<KeyValuePair<string, long>> Items { get; private set; }
+
+        public Playlist(String name, long duration, List<KeyValuePair<string, long>> items)
+        {
+            Name = name;
+            Duration = duration;
+            DurationString = PlaylistForm.ConvertMilisecondsToString(duration);
+            Items = items;
         }
     }
 }

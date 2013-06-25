@@ -16,9 +16,11 @@ namespace Overlay
             InitializeComponent();
             CasparCGHostnameTextBox.Text = Properties.Settings.Default.CasparCGHostname;
             CasparCGPortTextBox.Text = Properties.Settings.Default.CasparCGPort.ToString();
+            CasparCGChannelTextBox.Text = Properties.Settings.Default.CasparChannel.ToString();
             CasparCGNetworkVideoFolderTextBox.Text = Properties.Settings.Default.NetworkVideoFolder;
             MediaTransitionComboBox.Text = Properties.Settings.Default.MediaTransitionType;
             TransitionDurationTextBox.Text = Properties.Settings.Default.MediaTransitionDuration.ToString();
+            MediaTransitionAnimationTypeComboBox.Text = Properties.Settings.Default.MediaTransitionAnimationType;
         }
 
         private void CasparCGPortTextBox_Validating(object sender, CancelEventArgs e)
@@ -33,9 +35,11 @@ namespace Overlay
         {
             Properties.Settings.Default.CasparCGHostname = CasparCGHostnameTextBox.Text;
             Properties.Settings.Default.CasparCGPort = Convert.ToInt32(CasparCGPortTextBox.Text);
+            Properties.Settings.Default.CasparChannel = Convert.ToInt32(CasparCGChannelTextBox.Text);
             Properties.Settings.Default.NetworkVideoFolder = CasparCGNetworkVideoFolderTextBox.Text;
             Properties.Settings.Default.MediaTransitionType = MediaTransitionComboBox.Text;
             Properties.Settings.Default.MediaTransitionDuration = Convert.ToInt32(TransitionDurationTextBox.Text);
+            Properties.Settings.Default.MediaTransitionAnimationType = MediaTransitionAnimationTypeComboBox.Text;
 
             Properties.Settings.Default.Save();
 

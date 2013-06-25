@@ -222,17 +222,22 @@
             this.buttonStopVid = new System.Windows.Forms.Button();
             this.buttonPlayVid = new System.Windows.Forms.Button();
             this.PlaylistsTab = new System.Windows.Forms.TabPage();
+            this.PlaylistDragAndDropListView = new DragNDrop.DragAndDropListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PlaylistPlay = new System.Windows.Forms.Button();
             this.PlaylistDeleteButton = new System.Windows.Forms.Button();
             this.PlaylistEditButton = new System.Windows.Forms.Button();
             this.PlaylistAddButton = new System.Windows.Forms.Button();
-            this.PlaylistDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.imageBox = new System.Windows.Forms.ListBox();
             this.buttonStopImg = new System.Windows.Forms.Button();
             this.buttonPlayImg = new System.Windows.Forms.Button();
             this.settings_button = new System.Windows.Forms.Button();
+            this.VideoCountdownTimer = new System.Windows.Forms.Label();
+            this.VideoParserBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.PlaylistStop = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -249,7 +254,6 @@
             this.panVids.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.videoBox)).BeginInit();
             this.PlaylistsTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PlaylistDataGridView)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -283,6 +287,7 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 692);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1694, 22);
+            this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 16;
             this.statusStrip1.TabStop = true;
             this.statusStrip1.Text = "statusStrip1";
@@ -2301,6 +2306,7 @@
             // groupBox6
             // 
             this.groupBox6.BackColor = System.Drawing.Color.SkyBlue;
+            this.groupBox6.Controls.Add(this.VideoCountdownTimer);
             this.groupBox6.Controls.Add(this.VideoTabControl);
             this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox6.Location = new System.Drawing.Point(1403, 44);
@@ -2375,7 +2381,7 @@
             // 
             this.buttonStopVid.BackColor = System.Drawing.Color.Red;
             this.buttonStopVid.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonStopVid.Location = new System.Drawing.Point(9, 197);
+            this.buttonStopVid.Location = new System.Drawing.Point(9, 195);
             this.buttonStopVid.Name = "buttonStopVid";
             this.buttonStopVid.Size = new System.Drawing.Size(77, 44);
             this.buttonStopVid.TabIndex = 209;
@@ -2397,11 +2403,12 @@
             // 
             // PlaylistsTab
             // 
+            this.PlaylistsTab.Controls.Add(this.PlaylistStop);
+            this.PlaylistsTab.Controls.Add(this.PlaylistDragAndDropListView);
             this.PlaylistsTab.Controls.Add(this.PlaylistPlay);
             this.PlaylistsTab.Controls.Add(this.PlaylistDeleteButton);
             this.PlaylistsTab.Controls.Add(this.PlaylistEditButton);
             this.PlaylistsTab.Controls.Add(this.PlaylistAddButton);
-            this.PlaylistsTab.Controls.Add(this.PlaylistDataGridView);
             this.PlaylistsTab.Location = new System.Drawing.Point(4, 29);
             this.PlaylistsTab.Name = "PlaylistsTab";
             this.PlaylistsTab.Padding = new System.Windows.Forms.Padding(3);
@@ -2410,15 +2417,49 @@
             this.PlaylistsTab.Text = "Playlists";
             this.PlaylistsTab.UseVisualStyleBackColor = true;
             // 
+            // PlaylistDragAndDropListView
+            // 
+            this.PlaylistDragAndDropListView.AllowDrop = true;
+            this.PlaylistDragAndDropListView.AllowReorder = true;
+            this.PlaylistDragAndDropListView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PlaylistDragAndDropListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.PlaylistDragAndDropListView.FullRowSelect = true;
+            this.PlaylistDragAndDropListView.HideSelection = false;
+            this.PlaylistDragAndDropListView.LabelWrap = false;
+            this.PlaylistDragAndDropListView.LineColor = System.Drawing.Color.LightGray;
+            this.PlaylistDragAndDropListView.Location = new System.Drawing.Point(6, 6);
+            this.PlaylistDragAndDropListView.MultiSelect = false;
+            this.PlaylistDragAndDropListView.Name = "PlaylistDragAndDropListView";
+            this.PlaylistDragAndDropListView.Size = new System.Drawing.Size(197, 239);
+            this.PlaylistDragAndDropListView.TabIndex = 5;
+            this.PlaylistDragAndDropListView.UseCompatibleStateImageBehavior = false;
+            this.PlaylistDragAndDropListView.View = System.Windows.Forms.View.Details;
+            this.PlaylistDragAndDropListView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.PlaylistDragAndDropListView_ItemSelectionChanged);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Name";
+            this.columnHeader1.Width = 96;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Duration";
+            this.columnHeader2.Width = 73;
+            // 
             // PlaylistPlay
             // 
+            this.PlaylistPlay.BackColor = System.Drawing.Color.LawnGreen;
             this.PlaylistPlay.Enabled = false;
             this.PlaylistPlay.Location = new System.Drawing.Point(210, 181);
             this.PlaylistPlay.Name = "PlaylistPlay";
             this.PlaylistPlay.Size = new System.Drawing.Size(49, 62);
             this.PlaylistPlay.TabIndex = 4;
             this.PlaylistPlay.Text = "Play";
-            this.PlaylistPlay.UseVisualStyleBackColor = true;
+            this.PlaylistPlay.UseVisualStyleBackColor = false;
+            this.PlaylistPlay.Click += new System.EventHandler(this.PlaylistPlay_Click);
             // 
             // PlaylistDeleteButton
             // 
@@ -2448,14 +2489,7 @@
             this.PlaylistAddButton.TabIndex = 1;
             this.PlaylistAddButton.Text = "Add";
             this.PlaylistAddButton.UseVisualStyleBackColor = true;
-            // 
-            // PlaylistDataGridView
-            // 
-            this.PlaylistDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.PlaylistDataGridView.Location = new System.Drawing.Point(6, 6);
-            this.PlaylistDataGridView.Name = "PlaylistDataGridView";
-            this.PlaylistDataGridView.Size = new System.Drawing.Size(197, 236);
-            this.PlaylistDataGridView.TabIndex = 0;
+            this.PlaylistAddButton.Click += new System.EventHandler(this.PlaylistAddButton_Click);
             // 
             // groupBox7
             // 
@@ -2523,6 +2557,38 @@
             this.settings_button.UseVisualStyleBackColor = true;
             this.settings_button.Click += new System.EventHandler(this.settings_button_Click);
             // 
+            // VideoCountdownTimer
+            // 
+            this.VideoCountdownTimer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VideoCountdownTimer.BackColor = System.Drawing.Color.Transparent;
+            this.VideoCountdownTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VideoCountdownTimer.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.VideoCountdownTimer.Location = new System.Drawing.Point(156, 17);
+            this.VideoCountdownTimer.Name = "VideoCountdownTimer";
+            this.VideoCountdownTimer.Size = new System.Drawing.Size(121, 34);
+            this.VideoCountdownTimer.TabIndex = 1;
+            this.VideoCountdownTimer.Text = "00:00";
+            this.VideoCountdownTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.VideoCountdownTimer.Visible = false;
+            this.VideoCountdownTimer.TextChanged += new System.EventHandler(this.PlaylistCountdownTimer_TextChanged);
+            // 
+            // VideoParserBackgroundWorker
+            // 
+            this.VideoParserBackgroundWorker.WorkerReportsProgress = true;
+            // 
+            // PlaylistStop
+            // 
+            this.PlaylistStop.BackColor = System.Drawing.Color.Red;
+            this.PlaylistStop.Enabled = false;
+            this.PlaylistStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlaylistStop.Location = new System.Drawing.Point(210, 127);
+            this.PlaylistStop.Name = "PlaylistStop";
+            this.PlaylistStop.Size = new System.Drawing.Size(49, 49);
+            this.PlaylistStop.TabIndex = 6;
+            this.PlaylistStop.Text = "Stop";
+            this.PlaylistStop.UseVisualStyleBackColor = false;
+            this.PlaylistStop.Click += new System.EventHandler(this.PlaylistStop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2571,7 +2637,6 @@
             this.panVids.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.videoBox)).EndInit();
             this.PlaylistsTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.PlaylistDataGridView)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -2780,12 +2845,17 @@
         private System.Windows.Forms.ToolStripStatusLabel VideoListStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel GeneralStatusMessage;
-        private System.Windows.Forms.DataGridView PlaylistDataGridView;
         private System.Windows.Forms.Button PlaylistPlay;
         private System.Windows.Forms.Button PlaylistDeleteButton;
         private System.Windows.Forms.Button PlaylistEditButton;
         private System.Windows.Forms.Button PlaylistAddButton;
         private System.Windows.Forms.DataGridView videoBox;
+        private DragNDrop.DragAndDropListView PlaylistDragAndDropListView;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Label VideoCountdownTimer;
+        private System.ComponentModel.BackgroundWorker VideoParserBackgroundWorker;
+        private System.Windows.Forms.Button PlaylistStop;
     }
 }
 

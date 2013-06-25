@@ -50,6 +50,10 @@
             this.TransitionDurationTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.MediaTransitionAnimationTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.CasparCGChannelTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -94,7 +98,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 184);
+            this.label2.Location = new System.Drawing.Point(31, 209);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(80, 13);
             this.label2.TabIndex = 5;
@@ -104,7 +108,7 @@
             // 
             // CasparCGNetworkVideoFolderTextBox
             // 
-            this.CasparCGNetworkVideoFolderTextBox.Location = new System.Drawing.Point(117, 181);
+            this.CasparCGNetworkVideoFolderTextBox.Location = new System.Drawing.Point(117, 206);
             this.CasparCGNetworkVideoFolderTextBox.Name = "CasparCGNetworkVideoFolderTextBox";
             this.CasparCGNetworkVideoFolderTextBox.Size = new System.Drawing.Size(197, 20);
             this.CasparCGNetworkVideoFolderTextBox.TabIndex = 4;
@@ -113,7 +117,7 @@
             // 
             // CasparCGNetworkVideoFolderBrowseButton
             // 
-            this.CasparCGNetworkVideoFolderBrowseButton.Location = new System.Drawing.Point(320, 179);
+            this.CasparCGNetworkVideoFolderBrowseButton.Location = new System.Drawing.Point(320, 204);
             this.CasparCGNetworkVideoFolderBrowseButton.Name = "CasparCGNetworkVideoFolderBrowseButton";
             this.CasparCGNetworkVideoFolderBrowseButton.Size = new System.Drawing.Size(75, 23);
             this.CasparCGNetworkVideoFolderBrowseButton.TabIndex = 5;
@@ -132,7 +136,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 165);
+            this.label5.Location = new System.Drawing.Point(9, 190);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(131, 13);
             this.label5.TabIndex = 11;
@@ -163,7 +167,7 @@
             "PUSH",
             "WIPE",
             "SLIDE"});
-            this.MediaTransitionComboBox.Location = new System.Drawing.Point(71, 232);
+            this.MediaTransitionComboBox.Location = new System.Drawing.Point(71, 257);
             this.MediaTransitionComboBox.Name = "MediaTransitionComboBox";
             this.MediaTransitionComboBox.Size = new System.Drawing.Size(121, 21);
             this.MediaTransitionComboBox.TabIndex = 13;
@@ -172,7 +176,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 216);
+            this.label7.Location = new System.Drawing.Point(9, 241);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(93, 13);
             this.label7.TabIndex = 14;
@@ -181,7 +185,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(34, 235);
+            this.label8.Location = new System.Drawing.Point(34, 260);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(31, 13);
             this.label8.TabIndex = 15;
@@ -191,7 +195,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(34, 263);
+            this.label9.Location = new System.Drawing.Point(34, 288);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(47, 13);
             this.label9.TabIndex = 16;
@@ -201,7 +205,7 @@
             // 
             // TransitionDurationTextBox
             // 
-            this.TransitionDurationTextBox.Location = new System.Drawing.Point(87, 259);
+            this.TransitionDurationTextBox.Location = new System.Drawing.Point(87, 284);
             this.TransitionDurationTextBox.Name = "TransitionDurationTextBox";
             this.TransitionDurationTextBox.Size = new System.Drawing.Size(56, 20);
             this.TransitionDurationTextBox.TabIndex = 17;
@@ -212,7 +216,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(149, 263);
+            this.label3.Location = new System.Drawing.Point(149, 288);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(20, 13);
             this.label3.TabIndex = 18;
@@ -228,6 +232,82 @@
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(34, 313);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(80, 13);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Animation Type";
+            // 
+            // MediaTransitionAnimationTypeComboBox
+            // 
+            this.MediaTransitionAnimationTypeComboBox.FormattingEnabled = true;
+            this.MediaTransitionAnimationTypeComboBox.Items.AddRange(new object[] {
+            "linear",
+            "easenone",
+            "easeinquad",
+            "easeoutquad",
+            "easeinoutquad",
+            "easeoutinquad",
+            "easeincubic",
+            "easeoutcubic",
+            "easeinoutcubic",
+            "easeoutincubic",
+            "easeinquart",
+            "easeoutquart",
+            "easeinoutquart",
+            "easeoutinquart",
+            "easeinquint",
+            "easeoutquint",
+            "easeinoutquint",
+            "easeoutinquint",
+            "easeinsine",
+            "easeoutsine",
+            "easeinoutsine",
+            "easeoutinsine",
+            "easeinexpo",
+            "easeoutexpo",
+            "easeinoutexpo",
+            "easeoutinexpo",
+            "easeincirc",
+            "easeoutcirc",
+            "easeinoutcirc",
+            "easeoutincirc",
+            "easeinelastic",
+            "easeoutelastic",
+            "easeinoutelastic",
+            "easeoutinelastic",
+            "easeinback",
+            "easeoutback",
+            "easeinoutback",
+            "easeoutintback",
+            "easeoutbounce",
+            "easeinbounce",
+            "easeinoutbounce",
+            "easeoutinbounce"});
+            this.MediaTransitionAnimationTypeComboBox.Location = new System.Drawing.Point(120, 310);
+            this.MediaTransitionAnimationTypeComboBox.Name = "MediaTransitionAnimationTypeComboBox";
+            this.MediaTransitionAnimationTypeComboBox.Size = new System.Drawing.Size(101, 21);
+            this.MediaTransitionAnimationTypeComboBox.TabIndex = 20;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(9, 150);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(97, 13);
+            this.label10.TabIndex = 21;
+            this.label10.Text = "CasparCG Channel";
+            // 
+            // CasparCGChannelTextBox
+            // 
+            this.CasparCGChannelTextBox.Location = new System.Drawing.Point(112, 147);
+            this.CasparCGChannelTextBox.Name = "CasparCGChannelTextBox";
+            this.CasparCGChannelTextBox.Size = new System.Drawing.Size(42, 20);
+            this.CasparCGChannelTextBox.TabIndex = 22;
+            // 
             // Settings
             // 
             this.AcceptButton = this.SettingFormSaveButton;
@@ -235,6 +315,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.SettingsFormCancelButton;
             this.ClientSize = new System.Drawing.Size(560, 378);
+            this.Controls.Add(this.CasparCGChannelTextBox);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.MediaTransitionAnimationTypeComboBox);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.TransitionDurationTextBox);
             this.Controls.Add(this.label9);
@@ -284,5 +368,9 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox TransitionDurationTextBox;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox MediaTransitionAnimationTypeComboBox;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox CasparCGChannelTextBox;
     }
 }

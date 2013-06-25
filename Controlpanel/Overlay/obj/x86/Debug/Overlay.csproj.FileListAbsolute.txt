@@ -87,3 +87,5 @@ C:\Users\blair\Documents\GitHub\ControlPanel\Controlpanel\Overlay\obj\x86\Debug\
 C:\Users\blair\Documents\GitHub\ControlPanel\Controlpanel\Overlay\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\blair\Documents\GitHub\ControlPanel\Controlpanel\Overlay\obj\x86\Debug\Overlay.Settings.resources
 C:\Users\blair\Documents\GitHub\ControlPanel\Controlpanel\Overlay\bin\Debug\MediaInfoNET.dll
+C:\Users\blair\Documents\GitHub\ControlPanel\Controlpanel\Overlay\bin\Debug\DragNDrop.dll
+C:\Users\blair\Documents\GitHub\ControlPanel\Controlpanel\Overlay\obj\x86\Debug\Overlay.PlaylistForm.resources
