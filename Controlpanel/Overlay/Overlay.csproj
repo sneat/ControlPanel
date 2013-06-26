@@ -100,16 +100,14 @@
     <Reference Include="MediaInfoNET">
       <HintPath>Resources\MediaInfoNET_Binaries\MediaInfoNET.dll</HintPath>
     </Reference>
-    <Reference Include="Svt.Caspar, Version=1.1.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Svt.Caspar.dll</HintPath>
+    <Reference Include="Svt.Caspar">
+      <HintPath>Resources\Svt.Caspar.dll</HintPath>
     </Reference>
     <Reference Include="Svt.Caspar.Controls">
-      <HintPath>..\Svt.Caspar.Controls.dll</HintPath>
+      <HintPath>Resources\Svt.Caspar.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="Svt.Network, Version=1.1.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Svt.Network.dll</HintPath>
+    <Reference Include="Svt.Network">
+      <HintPath>Resources\Svt.Network.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
