@@ -27,6 +27,8 @@ using System.Runtime.InteropServices;
 using BMDSwitcherAPI;
 using MediaInfoNET;
 using Microsoft.Win32;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 #endregion
 
 namespace Overlay
@@ -69,9 +71,13 @@ namespace Overlay
         private String SelectedSingleVideo;
         public Dictionary<string, Playlist> Playlists = new Dictionary<string, Playlist>();
         private String CurrentlyPlayingPlaylist = null;
+        private String CurrentlyPlayingVideo = null;
+        private String NextPlayingVideo = null;
         private static long playlistCountdown = 0;
+        private static long playlistCountdownCurrentVideoDuration = 0;
+        private static long playlistCountdownNextVideoDuration = 0;
         private static System.Windows.Forms.Timer playlistTimer;
-        private static Queue<VideoFile> VideoQueue = new Queue<VideoFile>();
+        private static ConcurrentQueue<VideoFile> VideoQueue = new ConcurrentQueue<VideoFile>();
         #endregion
 
         #region constructor
@@ -185,6 +191,7 @@ namespace Overlay
             toolStripStatusLabel1.Text = "Connected to " + caspar_.Settings.Hostname; // Properties.Settings.Default.CasparCGHostname;
             Properties.Settings.Default.CasparCGHostname = caspar_.Settings.Hostname;
             Properties.Settings.Default.Save();
+            ParsedVideoFiles.Clear();
 
             enableControls();
             popVidBox();
@@ -659,7 +666,7 @@ namespace Overlay
             {
                 Svt.Caspar.MediaInfo item = caspar_.Mediafiles[i];
 
-                string filename = item.ToString();
+                string filename = item.ToString().Replace("\\", "/");
                 string filetype = item.Type.ToString();
 
                 if (filetype == "MOVIE")
@@ -679,19 +686,19 @@ namespace Overlay
             videoBox.DataSource = ParsedVideoFiles.Values.ToArray();
 
             //videoBox.ResetBindings();
-            if (HasVideos && Properties.Settings.Default.NetworkVideoFolder.Length > 0 && range > 0)
+            try
             {
                 DirectoryInfo dinfo = new DirectoryInfo(@Properties.Settings.Default.NetworkVideoFolder);
                 FileInfo[] Files = dinfo.GetFiles("*.*", SearchOption.AllDirectories);
 
                 foreach (FileInfo file in Files)
                 {
-                        String name = ConvertNetworkPathToCasparPath(file);
-                        // Check to make sure it is a video
-                        if (GetMimeType(file).StartsWith("video/"))
-                        {
-                            VideoFiles.Add(file);
-                        }
+                    String name = ConvertNetworkPathToCasparPath(file);
+                    // Check to make sure it is a video
+                    if (GetMimeType(file).StartsWith("video/"))
+                    {
+                        VideoFiles.Add(file);
+                    }
                 }
 
                 if (VideoFiles.Count > 0)
@@ -705,6 +712,10 @@ namespace Overlay
                     VideoParserBackgroundWorker.WorkerReportsProgress = true;
                     VideoParserBackgroundWorker.RunWorkerAsync();
                 }
+            }
+            catch
+            {
+                MessageBox.Show("Could not read " + Properties.Settings.Default.NetworkVideoFolder + ". Please ensure path is accessible.", "Error");
             }
         }
 
@@ -1492,7 +1503,7 @@ namespace Overlay
         //Convert UNC file path to filename for use within CasparCG
         public String ConvertNetworkPathToCasparPath(FileInfo file)
         {
-            return file.FullName.Replace(Properties.Settings.Default.NetworkVideoFolder + "\\", "").Replace(file.Extension, "").ToUpper();
+            return file.FullName.Replace(Properties.Settings.Default.NetworkVideoFolder + "\\", "").Replace(file.Extension, "").Replace("\\", "/").ToUpper();
         }
 
         //Read video files over network to get duration
@@ -1503,12 +1514,14 @@ namespace Overlay
             foreach (FileInfo file in VideoFiles)
             {
                 i++;
-                MediaFile mFile = new MediaFile(file.FullName);
+                Console.WriteLine("Checking {0}", file.FullName);
+                MediaFile mFile = new MediaFile(@file.FullName);
 
                 VideoFile VideoFile = ParsedVideoFiles[ConvertNetworkPathToCasparPath(file)];
                 VideoFile.NetworkPath = file.FullName;
                 VideoFile.Duration = mFile.General.DurationMillis;
                 VideoFile.DurationString = TimeSpan.FromMilliseconds(VideoFile.Duration).ToString(@"mm\:ss");
+                Console.WriteLine("{0} {1} {2}fps", VideoFile.CasparPath, VideoFile.DurationString, mFile.Video[0].FrameRate);
 
                 ParsedVideoFiles[ConvertNetworkPathToCasparPath(file)] = VideoFile;
                 videoBox.NotifyCurrentCellDirty(true);
@@ -1636,6 +1649,35 @@ namespace Overlay
                 playlistTimer = new System.Windows.Forms.Timer();
                 playlistTimer.Interval = 1000;
                 playlistTimer.Tick += new EventHandler(playlistTimerTick);
+
+                VideoFile CurrentVideoFile;
+                if (VideoQueue.TryDequeue(out CurrentVideoFile))
+                {
+                    try
+                    {
+                        // Send our first video to be played
+                        playlistCountdownCurrentVideoDuration = CurrentVideoFile.Duration;
+                        CurrentlyPlayingVideo = CurrentVideoFile.CasparPath;
+                        caspar_.SendString(String.Format("PLAY {0}-{1} \"{2}\" {3} {4} {5}", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer, @CurrentlyPlayingVideo, Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
+                    }
+                    catch { }
+                }
+                if (VideoQueue.TryDequeue(out CurrentVideoFile))
+                {
+                    try
+                    {
+                        playlistCountdownNextVideoDuration = CurrentVideoFile.Duration;
+                        NextPlayingVideo = CurrentVideoFile.CasparPath;
+                        caspar_.SendString(String.Format("LOADBG {0}-{1} \"{2}\" {3} {4} {5} AUTO", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer, @NextPlayingVideo, Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
+                    }
+                    catch { }
+                }
+                else
+                {
+                    playlistCountdownNextVideoDuration = 0;
+                    NextPlayingVideo = null;
+                    caspar_.SendString(String.Format("LOADBG {0}-{1} EMPTY {2} {3} {4} AUTO", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer, Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
+                }
                 playlistTimer.Start();
             }
         }
@@ -1643,10 +1685,35 @@ namespace Overlay
         private void playlistTimerTick(object source, EventArgs e)
         {
             playlistCountdown -= 1000;
+            playlistCountdownCurrentVideoDuration -= 1000;
             Console.WriteLine("Time left is {0}ms", playlistCountdown);
+            if (playlistCountdownCurrentVideoDuration < 0)
+            {
+                // Queue the next video
+                playlistCountdownCurrentVideoDuration = playlistCountdownNextVideoDuration;
+                CurrentlyPlayingVideo = NextPlayingVideo;
+                VideoFile NextVideoFile;
+                if (VideoQueue.TryDequeue(out NextVideoFile))
+                {
+                    try
+                    {
+                        playlistCountdownNextVideoDuration = NextVideoFile.Duration;
+                        NextPlayingVideo = NextVideoFile.CasparPath;
+                        caspar_.SendString(String.Format("LOADBG {0}-{1} \"{2}\" {3} {4} {5} AUTO", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer, @NextPlayingVideo, Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
+                    }
+                    catch { }
+                }
+                else
+                {
+                    playlistCountdownNextVideoDuration = 0;
+                    NextPlayingVideo = null;
+                    caspar_.SendString(String.Format("LOADBG {0}-{1} EMPTY {2} {3} {4} AUTO", Properties.Settings.Default.CasparChannel, Properties.Settings.Default.VideoLayer, Properties.Settings.Default.MediaTransitionType, Properties.Settings.Default.MediaTransitionDuration, Properties.Settings.Default.MediaTransitionAnimationType));
+                }
+            }
             if (playlistCountdown < 0)
             {
                 PlaylistStop.PerformClick();
+                playlistCountdownCurrentVideoDuration = 0;
             }
             else
             {
@@ -1658,7 +1725,7 @@ namespace Overlay
         {
             try
             {
-                VideoQueue.Clear();
+                VideoQueue = new ConcurrentQueue<VideoFile>();
                 CurrentlyPlayingPlaylist = null;
                 PlaylistStop.Enabled = false;
                 playlistTimer.Enabled = false;

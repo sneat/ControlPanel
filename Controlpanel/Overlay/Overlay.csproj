@@ -101,13 +101,13 @@
       <HintPath>Resources\MediaInfoNET_Binaries\MediaInfoNET.dll</HintPath>
     </Reference>
     <Reference Include="Svt.Caspar">
-      <HintPath>Resources\Svt.Caspar.dll</HintPath>
+      <HintPath>Resources\CasparCG_.NET_Framework_1.0.0\x64\Svt.Caspar.dll</HintPath>
     </Reference>
     <Reference Include="Svt.Caspar.Controls">
-      <HintPath>Resources\Svt.Caspar.Controls.dll</HintPath>
+      <HintPath>Resources\CasparCG_.NET_Framework_1.0.0\x64\Svt.Caspar.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Svt.Network">
-      <HintPath>Resources\Svt.Network.dll</HintPath>
+      <HintPath>Resources\CasparCG_.NET_Framework_1.0.0\x64\Svt.Network.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
