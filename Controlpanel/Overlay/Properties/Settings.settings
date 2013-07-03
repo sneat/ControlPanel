@@ -137,5 +137,8 @@
     <Setting Name="MediaTransitionAnimationType" Type="System.String" Scope="User">
       <Value Profile="(Default)">linear</Value>
     </Setting>
+    <Setting Name="CasparCGVideoFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

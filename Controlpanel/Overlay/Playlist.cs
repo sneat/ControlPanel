@@ -38,7 +38,7 @@ namespace Overlay
             if (keyData == Keys.Escape)
             {
                 this.AutoValidate = AutoValidate.Disable;
-                CancelButton.PerformClick();
+                CloseButton.PerformClick();
                 this.AutoValidate = AutoValidate.Inherit;
                 return true;
             }

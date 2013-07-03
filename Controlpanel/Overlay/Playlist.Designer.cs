@@ -31,7 +31,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.DescriptionTextBox = new System.Windows.Forms.TextBox();
             this.OkButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.CloseButton = new System.Windows.Forms.Button();
             this.TotalDurationLabel = new System.Windows.Forms.Label();
             this.PlaylistDragAndDropListView = new DragNDrop.DragAndDropListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -64,15 +64,15 @@
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
-            // CancelButton
+            // CloseButton
             // 
-            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(416, 354);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 4;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.CloseButton.Location = new System.Drawing.Point(416, 354);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(75, 23);
+            this.CloseButton.TabIndex = 4;
+            this.CloseButton.Text = "Cancel";
+            this.CloseButton.UseVisualStyleBackColor = true;
             // 
             // TotalDurationLabel
             // 
@@ -121,7 +121,7 @@
             this.ClientSize = new System.Drawing.Size(584, 382);
             this.Controls.Add(this.PlaylistDragAndDropListView);
             this.Controls.Add(this.TotalDurationLabel);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.DescriptionTextBox);
             this.Controls.Add(this.label1);
@@ -140,7 +140,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox DescriptionTextBox;
         private System.Windows.Forms.Button OkButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Label TotalDurationLabel;
         private DragNDrop.DragAndDropListView PlaylistDragAndDropListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;

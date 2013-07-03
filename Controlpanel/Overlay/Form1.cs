@@ -66,10 +66,10 @@ namespace Overlay
         private List<InputMonitor> m_inputMonitors = new List<InputMonitor>();
 
         //Video parsing
-        private List<FileInfo> VideoFiles = new List<FileInfo>();
-        private Dictionary<string, VideoFile> ParsedVideoFiles = new Dictionary<string, VideoFile>();
+        private List<FileInfo> VideoFiles;
+        private Dictionary<string, VideoFile> ParsedVideoFiles;
         private String SelectedSingleVideo;
-        public Dictionary<string, Playlist> Playlists = new Dictionary<string, Playlist>();
+        public Dictionary<string, Playlist> Playlists;
         private String CurrentlyPlayingPlaylist = null;
         private String CurrentlyPlayingVideo = null;
         private String NextPlayingVideo = null;
@@ -77,7 +77,8 @@ namespace Overlay
         private static long playlistCountdownCurrentVideoDuration = 0;
         private static long playlistCountdownNextVideoDuration = 0;
         private static System.Windows.Forms.Timer playlistTimer;
-        private static ConcurrentQueue<VideoFile> VideoQueue = new ConcurrentQueue<VideoFile>();
+        private static ConcurrentQueue<VideoFile> VideoQueue;
+        public List<VideoFormat> VideoFormats;
         #endregion
 
         #region constructor
@@ -144,6 +145,40 @@ namespace Overlay
         }
         #endregion
 
+        #region populate video formats
+        private void populateVideoFormats()
+        {
+            VideoFormats = new List<VideoFormat>();
+            VideoFormats.Add(new VideoFormat("PAL", 50, 1024, 576));
+            VideoFormats.Add(new VideoFormat("NTSC", 59.94, 720, 480));
+            VideoFormats.Add(new VideoFormat("576p2500", 25, 1024, 576));
+            VideoFormats.Add(new VideoFormat("720p2398", 23.976, 1280, 720));
+            VideoFormats.Add(new VideoFormat("720p2400", 24, 1280, 720));
+            VideoFormats.Add(new VideoFormat("720p2500", 25, 1280, 720));
+            VideoFormats.Add(new VideoFormat("720p2997", 29.976, 1280, 720));
+            VideoFormats.Add(new VideoFormat("720p3000", 30, 1280, 720));
+            VideoFormats.Add(new VideoFormat("720p5000", 50, 1280, 720));
+            VideoFormats.Add(new VideoFormat("720p5994", 59.94, 1280, 720));
+            VideoFormats.Add(new VideoFormat("720p6000", 60, 1280, 720));
+            VideoFormats.Add(new VideoFormat("1080p2397", 23.976, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080p2400", 24, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080p2500", 25, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080p2997", 29.976, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080p3000", 30, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080p5000", 50, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080i5000", 50, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080p5994", 59.94, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080i5994", 59.94, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080p6000", 60, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("1080i6000", 60, 1920, 1080));
+            VideoFormats.Add(new VideoFormat("2160p2397", 23.976, 3840, 2160));
+            VideoFormats.Add(new VideoFormat("2160p2400", 24, 3840, 2160));
+            VideoFormats.Add(new VideoFormat("2160p2500", 25, 3840, 2160));
+            VideoFormats.Add(new VideoFormat("2160p2997", 29.976, 3840, 2160));
+            VideoFormats.Add(new VideoFormat("2160p3000", 30, 3840, 2160));
+        }
+        #endregion
+
         #region caspar connection
         //Button handlers
         private void buttonConnect_Click_1(object sender, EventArgs e)
@@ -191,7 +226,16 @@ namespace Overlay
             toolStripStatusLabel1.Text = "Connected to " + caspar_.Settings.Hostname; // Properties.Settings.Default.CasparCGHostname;
             Properties.Settings.Default.CasparCGHostname = caspar_.Settings.Hostname;
             Properties.Settings.Default.Save();
-            ParsedVideoFiles.Clear();
+
+            VideoFiles = new List<FileInfo>();
+            ParsedVideoFiles = new Dictionary<string, VideoFile>();
+            Playlists = new Dictionary<string, Playlist>();
+            CurrentlyPlayingPlaylist = null;
+            CurrentlyPlayingVideo = null;
+            NextPlayingVideo = null;
+            playlistCountdown = 0;
+            playlistCountdownCurrentVideoDuration = 0;
+            VideoQueue = new ConcurrentQueue<VideoFile>();
 
             enableControls();
             popVidBox();
@@ -644,7 +688,6 @@ namespace Overlay
         //Populate video comboboxes
         private void popVidBox()
         {
-            Boolean HasVideos = false;
             int range = caspar_.Mediafiles.Count;
 
             videoBox.AutoGenerateColumns = false;
@@ -675,7 +718,6 @@ namespace Overlay
                     VideoFile.CasparPath = filename;
                     ParsedVideoFiles.Add(filename, VideoFile);
                     Console.WriteLine("Adding {0}", filename);
-                    HasVideos = true;
                 }
                 else
                 {
@@ -1828,5 +1870,20 @@ namespace Overlay
             DurationString = PlaylistForm.ConvertMilisecondsToString(duration);
             Items = items;
         }
+    }
+
+    public class VideoFormat : ApplicationSettingsBase
+    {
+        [UserScopedSetting()]
+        [SettingsSerializeAs(System.Configuration.SettingsSerializeAs.String)]
+        [DefaultSettingValue("1080i5994")]
+        public String Name { get; private set; }
+        public double FrameRate { get; private set; }
+        public int X { get; private set; }
+        public int Y { get; private set; }
+        public String Resolution { get { return String.Format("{0}x{1}", X.ToString(), Y.ToString()); } }
+
+
+        public VideoFormat(String Name, double FrameRate, int X, int Y) { }
     }
 }
