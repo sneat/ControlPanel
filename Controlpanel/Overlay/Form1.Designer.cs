@@ -214,6 +214,7 @@
             this.label24 = new System.Windows.Forms.Label();
             this.btnClear = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.VideoCountdownTimer = new System.Windows.Forms.Label();
             this.VideoTabControl = new System.Windows.Forms.TabControl();
             this.SingleVideoTab = new System.Windows.Forms.TabPage();
             this.panVids = new System.Windows.Forms.Panel();
@@ -222,6 +223,7 @@
             this.buttonStopVid = new System.Windows.Forms.Button();
             this.buttonPlayVid = new System.Windows.Forms.Button();
             this.PlaylistsTab = new System.Windows.Forms.TabPage();
+            this.PlaylistStop = new System.Windows.Forms.Button();
             this.PlaylistDragAndDropListView = new DragNDrop.DragAndDropListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -235,9 +237,8 @@
             this.buttonStopImg = new System.Windows.Forms.Button();
             this.buttonPlayImg = new System.Windows.Forms.Button();
             this.settings_button = new System.Windows.Forms.Button();
-            this.VideoCountdownTimer = new System.Windows.Forms.Label();
             this.VideoParserBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.PlaylistStop = new System.Windows.Forms.Button();
+            this.ConnectXKeysButton = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -2316,6 +2317,21 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Videos";
             // 
+            // VideoCountdownTimer
+            // 
+            this.VideoCountdownTimer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VideoCountdownTimer.BackColor = System.Drawing.Color.Transparent;
+            this.VideoCountdownTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VideoCountdownTimer.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.VideoCountdownTimer.Location = new System.Drawing.Point(156, 17);
+            this.VideoCountdownTimer.Name = "VideoCountdownTimer";
+            this.VideoCountdownTimer.Size = new System.Drawing.Size(121, 34);
+            this.VideoCountdownTimer.TabIndex = 1;
+            this.VideoCountdownTimer.Text = "00:00";
+            this.VideoCountdownTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.VideoCountdownTimer.Visible = false;
+            this.VideoCountdownTimer.TextChanged += new System.EventHandler(this.PlaylistCountdownTimer_TextChanged);
+            // 
             // VideoTabControl
             // 
             this.VideoTabControl.Controls.Add(this.SingleVideoTab);
@@ -2416,6 +2432,19 @@
             this.PlaylistsTab.TabIndex = 1;
             this.PlaylistsTab.Text = "Playlists";
             this.PlaylistsTab.UseVisualStyleBackColor = true;
+            // 
+            // PlaylistStop
+            // 
+            this.PlaylistStop.BackColor = System.Drawing.Color.Red;
+            this.PlaylistStop.Enabled = false;
+            this.PlaylistStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlaylistStop.Location = new System.Drawing.Point(210, 127);
+            this.PlaylistStop.Name = "PlaylistStop";
+            this.PlaylistStop.Size = new System.Drawing.Size(49, 49);
+            this.PlaylistStop.TabIndex = 6;
+            this.PlaylistStop.Text = "Stop";
+            this.PlaylistStop.UseVisualStyleBackColor = false;
+            this.PlaylistStop.Click += new System.EventHandler(this.PlaylistStop_Click);
             // 
             // PlaylistDragAndDropListView
             // 
@@ -2557,43 +2586,26 @@
             this.settings_button.UseVisualStyleBackColor = true;
             this.settings_button.Click += new System.EventHandler(this.settings_button_Click);
             // 
-            // VideoCountdownTimer
-            // 
-            this.VideoCountdownTimer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VideoCountdownTimer.BackColor = System.Drawing.Color.Transparent;
-            this.VideoCountdownTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VideoCountdownTimer.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.VideoCountdownTimer.Location = new System.Drawing.Point(156, 17);
-            this.VideoCountdownTimer.Name = "VideoCountdownTimer";
-            this.VideoCountdownTimer.Size = new System.Drawing.Size(121, 34);
-            this.VideoCountdownTimer.TabIndex = 1;
-            this.VideoCountdownTimer.Text = "00:00";
-            this.VideoCountdownTimer.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.VideoCountdownTimer.Visible = false;
-            this.VideoCountdownTimer.TextChanged += new System.EventHandler(this.PlaylistCountdownTimer_TextChanged);
-            // 
             // VideoParserBackgroundWorker
             // 
             this.VideoParserBackgroundWorker.WorkerReportsProgress = true;
             // 
-            // PlaylistStop
+            // ConnectXKeysButton
             // 
-            this.PlaylistStop.BackColor = System.Drawing.Color.Red;
-            this.PlaylistStop.Enabled = false;
-            this.PlaylistStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PlaylistStop.Location = new System.Drawing.Point(210, 127);
-            this.PlaylistStop.Name = "PlaylistStop";
-            this.PlaylistStop.Size = new System.Drawing.Size(49, 49);
-            this.PlaylistStop.TabIndex = 6;
-            this.PlaylistStop.Text = "Stop";
-            this.PlaylistStop.UseVisualStyleBackColor = false;
-            this.PlaylistStop.Click += new System.EventHandler(this.PlaylistStop_Click);
+            this.ConnectXKeysButton.Location = new System.Drawing.Point(652, 9);
+            this.ConnectXKeysButton.Name = "ConnectXKeysButton";
+            this.ConnectXKeysButton.Size = new System.Drawing.Size(96, 23);
+            this.ConnectXKeysButton.TabIndex = 198;
+            this.ConnectXKeysButton.Text = "Connect X-Keys";
+            this.ConnectXKeysButton.UseVisualStyleBackColor = true;
+            this.ConnectXKeysButton.Click += new System.EventHandler(this.ConnectXKeysButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1694, 714);
+            this.Controls.Add(this.ConnectXKeysButton);
             this.Controls.Add(this.settings_button);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
@@ -2856,6 +2868,7 @@
         private System.Windows.Forms.Label VideoCountdownTimer;
         private System.ComponentModel.BackgroundWorker VideoParserBackgroundWorker;
         private System.Windows.Forms.Button PlaylistStop;
+        private System.Windows.Forms.Button ConnectXKeysButton;
     }
 }
 

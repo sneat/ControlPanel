@@ -29,6 +29,7 @@ using MediaInfoNET;
 using Microsoft.Win32;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using PIEHidDotNet;
 #endregion
 
 namespace Overlay
@@ -79,6 +80,12 @@ namespace Overlay
         private static System.Windows.Forms.Timer playlistTimer;
         private static ConcurrentQueue<VideoFile> VideoQueue;
         public List<VideoFormat> VideoFormats;
+
+        //X-Keys
+        public PIEDevice[] devices;
+        public int[] cbotodevice = null; //for each item in the CboDevice list maps this index to the device index.  Max devices =100 
+        public byte[] wData = null; //write data buffer
+        public int selecteddevice = -1; //set to the index of CboDevice
         #endregion
 
         #region constructor
@@ -1334,7 +1341,122 @@ namespace Overlay
         }
         #endregion
 
+        #region xkeys
+        public void SetAllXKeysBacklights(bool on) {
+            //Turns on or off, ALL bank 1 BLs using current intensity
+            if (selecteddevice != -1) //do nothing if not enumerated
+            {
+                byte sl = 0;
+
+                if (on == true)
+                {
+                    sl = 255;
+                }
+
+                for (int j = 0; j < devices[selecteddevice].WriteLength; j++)
+                {
+                    wData[j] = 0;
+                }
+
+                wData[0] = 0;
+                wData[1] = 182; //0xb6
+                wData[2] = 0;  //0 for bank 1, 1 for bank 2
+                wData[3] = (byte)sl; //OR turn individual rows on or off using bits.  1st bit=row 1, 2nd bit=row 2, 3rd bit =row 3, etc
+
+                int result = devices[selecteddevice].WriteData(wData);
+                if (result != 0)
+                {
+                    Console.WriteLine( "Write Fail: " + result);
+                }
+                else
+                {
+                    Console.WriteLine( "Write Success-All bank 1 BL {0}", on ? "on" : "off");
+                }
+            }
+        }
+        #endregion
+
         #region buttonactions
+
+        private void ConnectXKeysButton_Click(object sender, EventArgs e)
+        {
+            cbotodevice = new int[128]; //128=max # of devices
+            //enumerate and setupinterfaces for all devices
+            devices = PIEHidDotNet.PIEDevice.EnumeratePIE();
+            if (devices.Length == 0)
+            {
+                toolStripStatusLabel1.Text = "No Devices Found";
+            }
+            else
+            {
+                //System.Media.SystemSounds.Beep.Play(); 
+                int cbocount = 0; //keeps track of how many valid devices were added to the CboDevice box
+                for (int i = 0; i < devices.Length; i++)
+                {
+                    //information about device
+                    //PID = devices[i].Pid);
+                    //HID Usage = devices[i].HidUsage);
+                    //HID Usage Page = devices[i].HidUsagePage);
+                    //HID Version = devices[i].Version);
+                    int hidusagepg = devices[i].HidUsagePage;
+                    int hidusage = devices[i].HidUsage;
+                    if (devices[i].HidUsagePage == 0xc)
+                    {
+                        switch (devices[i].Pid)
+                        {
+                            case 1027:
+                                //Device 2 Keyboard, Joystick, Input and Output endpoints
+                                GeneralStatusMessage.Text = "Connected: X-keys XK-24 (" + devices[i].Pid + "=PID #2)";
+                                GeneralStatusMessage.Visible = true;
+                                cbotodevice[cbocount] = i;
+                                cbocount++;
+                                break;
+                            case 1028:
+                                //Device 1 Keyboard, Joystick, Mouse and Output endpoints
+                                GeneralStatusMessage.Text = "Connected: X-keys XK-24 (" + devices[i].Pid + ")";
+                                GeneralStatusMessage.Visible = true;
+                                cbotodevice[cbocount] = i;
+                                cbocount++;
+                                break;
+                            case 1029:
+                                //Device 0 Keyboard, Mouse, Input and Output endpoints (factory default)
+                                GeneralStatusMessage.Text = "Connected: X-keys XK-24 (" + devices[i].Pid + "=PID #1)";
+                                GeneralStatusMessage.Visible = true;
+                                cbotodevice[cbocount] = i;
+                                cbocount++;
+                                break;
+                            default:
+                                break;
+                        }
+                        devices[i].SetupInterface(false);
+                    }
+                }
+                if (cbotodevice.Count() > 0)
+                {
+                    System.Timers.Timer aTimer = new System.Timers.Timer(1000 * 10);
+                    aTimer.Elapsed += new ElapsedEventHandler(ClearGeneralStatusMessageText);
+                    aTimer.Enabled = true; 
+                    selecteddevice = cbotodevice[0];
+                    wData = new byte[devices[selecteddevice].WriteLength];//go ahead and setup for write
+
+                    // Turn the Green LED on
+                    for (int j = 0; j < devices[selecteddevice].WriteLength; j++)
+                    {
+                        wData[j] = 0;
+                    }
+                    wData[1] = 179; //0xb3
+                    wData[2] = 6; //6 for green, 7 for red
+                    wData[3] = 1; //0=off, 1=on, 2=flash
+                    int result = devices[selecteddevice].WriteData(wData);
+
+                    // Flash the lights to show that we're ok
+                    SetAllXKeysBacklights(false);
+                    SetAllXKeysBacklights(true);
+                    SetAllXKeysBacklights(false);
+                }
+            }
+        }
+
         //Clear ALL!
         private void btnClear_Click(object sender, EventArgs e)
         {
@@ -1592,6 +1714,18 @@ namespace Overlay
             }
         }
 
+        public void ClearGeneralStatusMessageText()
+        {
+            GeneralStatusMessage.Text = "";
+            GeneralStatusMessage.Visible = false;
+        }
+
+        public void ClearGeneralStatusMessageText(object sender, ElapsedEventArgs e)
+        {
+            GeneralStatusMessage.Text = "";
+            GeneralStatusMessage.Visible = false;
+        }
+
         //Called when a video has finished being parsed
         private void VideoParserBackgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
@@ -1798,6 +1932,7 @@ namespace Overlay
             }
         }
         #endregion
+
     }
 
     public class VideoFile : INotifyPropertyChanged
